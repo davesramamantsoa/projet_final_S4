@@ -1,0 +1,204 @@
+CRITICAL - 2026-07-20 06:10:42 --> ErrorException: require_once(/home/princy/Documents/ROJO/exam/projet_final_S4/vendor/codeigniter4/framework/system/ThirdParty/Kint/init.php): Failed to open stream: No such file or directory
+[Method: GET, Route: /]
+in SYSTEMPATH/Autoloader/Autoloader.php on line 548.
+ 1 SYSTEMPATH/Autoloader/Autoloader.php(548): CodeIgniter\Debug\Exceptions->errorHandler()
+ 2 SYSTEMPATH/Autoloader/Autoloader.php(548): require_once()
+ 3 SYSTEMPATH/Autoloader/Autoloader.php(520): CodeIgniter\Autoloader\Autoloader->autoloadKint()
+ 4 SYSTEMPATH/Boot.php(385): CodeIgniter\Autoloader\Autoloader->initializeKint()
+ 5 SYSTEMPATH/Boot.php(160): CodeIgniter\Boot::initializeKint()
+ 6 ROOTPATH/spark(30): CodeIgniter\Boot::bootSpark()
+CRITICAL - 2026-07-20 06:15:44 --> ErrorException: Undefined property: Config\Database::$filesPath
+[Method: CLI, Route: db:seed/DatabaseSeeder]
+in SYSTEMPATH/Database/Seeder.php on line 81.
+ 1 SYSTEMPATH/Database/Seeder.php(81): CodeIgniter\Debug\Exceptions->errorHandler()
+ 2 SYSTEMPATH/Commands/Database/Seed.php(71): CodeIgniter\Database\Seeder->__construct()
+ 3 SYSTEMPATH/CLI/Commands.php(72): CodeIgniter\Commands\Database\Seed->run()
+ 4 SYSTEMPATH/CLI/Console.php(47): CodeIgniter\CLI\Commands->run()
+ 5 SYSTEMPATH/Boot.php(444): CodeIgniter\CLI\Console->run()
+ 6 SYSTEMPATH/Boot.php(166): CodeIgniter\Boot::runCommand()
+ 7 ROOTPATH/spark(30): CodeIgniter\Boot::bootSpark()
+CRITICAL - 2026-07-20 06:15:56 --> ErrorException: Undefined property: Config\Database::$filesPath
+[Method: CLI, Route: db:seed/App\Database\Seeds\DatabaseSeeder]
+in SYSTEMPATH/Database/Seeder.php on line 81.
+ 1 SYSTEMPATH/Database/Seeder.php(81): CodeIgniter\Debug\Exceptions->errorHandler()
+ 2 SYSTEMPATH/Commands/Database/Seed.php(71): CodeIgniter\Database\Seeder->__construct()
+ 3 SYSTEMPATH/CLI/Commands.php(72): CodeIgniter\Commands\Database\Seed->run()
+ 4 SYSTEMPATH/CLI/Console.php(47): CodeIgniter\CLI\Commands->run()
+ 5 SYSTEMPATH/Boot.php(444): CodeIgniter\CLI\Console->run()
+ 6 SYSTEMPATH/Boot.php(166): CodeIgniter\Boot::runCommand()
+ 7 ROOTPATH/spark(30): CodeIgniter\Boot::bootSpark()
+CRITICAL - 2026-07-20 06:16:07 --> ErrorException: Undefined property: Config\Database::$filesPath
+[Method: CLI, Route: db:seed/DatabaseSeeder]
+in SYSTEMPATH/Database/Seeder.php on line 81.
+ 1 SYSTEMPATH/Database/Seeder.php(81): CodeIgniter\Debug\Exceptions->errorHandler()
+ 2 SYSTEMPATH/Commands/Database/Seed.php(71): CodeIgniter\Database\Seeder->__construct()
+ 3 SYSTEMPATH/CLI/Commands.php(72): CodeIgniter\Commands\Database\Seed->run()
+ 4 SYSTEMPATH/CLI/Console.php(47): CodeIgniter\CLI\Commands->run()
+ 5 SYSTEMPATH/Boot.php(444): CodeIgniter\CLI\Console->run()
+ 6 SYSTEMPATH/Boot.php(166): CodeIgniter\Boot::runCommand()
+ 7 ROOTPATH/spark(30): CodeIgniter\Boot::bootSpark()
+CRITICAL - 2026-07-20 06:16:54 --> ErrorException: Undefined property: Config\Database::$filesPath
+[Method: CLI, Route: db:seed/DatabaseSeeder]
+in SYSTEMPATH/Database/Seeder.php on line 81.
+ 1 SYSTEMPATH/Database/Seeder.php(81): CodeIgniter\Debug\Exceptions->errorHandler()
+ 2 SYSTEMPATH/Commands/Database/Seed.php(71): CodeIgniter\Database\Seeder->__construct()
+ 3 SYSTEMPATH/CLI/Commands.php(72): CodeIgniter\Commands\Database\Seed->run()
+ 4 SYSTEMPATH/CLI/Console.php(47): CodeIgniter\CLI\Commands->run()
+ 5 SYSTEMPATH/Boot.php(444): CodeIgniter\CLI\Console->run()
+ 6 SYSTEMPATH/Boot.php(166): CodeIgniter\Boot::runCommand()
+ 7 ROOTPATH/spark(30): CodeIgniter\Boot::bootSpark()
+CRITICAL - 2026-07-20 06:17:40 --> ErrorException: Type of App\Controllers\BaseController::$helpers must be omitted to match the parent definition in class CodeIgniter\Controller
+[Method: GET, Route: /]
+in APPPATH/Controllers/BaseController.php on line 12.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2026-07-20 06:18:19 --> ErrorException: Type of App\Controllers\BaseController::$request must be omitted to match the parent definition in class CodeIgniter\Controller
+[Method: GET, Route: /]
+in APPPATH/Controllers/BaseController.php on line 12.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2026-07-20 06:18:33 --> ErrorException: Type of App\Controllers\BaseController::$request must be omitted to match the parent definition in class CodeIgniter\Controller
+[Method: GET, Route: /]
+in APPPATH/Controllers/BaseController.php on line 12.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2026-07-20 06:19:43 --> CodeIgniter\Security\Exceptions\SecurityException: The action you requested is not allowed.
+[Method: POST, Route: client/login]
+in SYSTEMPATH/Security/Security.php on line 258.
+ 1 SYSTEMPATH/Security/Security.php(258): CodeIgniter\Security\Exceptions\SecurityException::forDisallowedAction()
+ 2 SYSTEMPATH/Filters/CSRF.php(52): CodeIgniter\Security\Security->verify()
+ 3 SYSTEMPATH/Filters/Filters.php(241): CodeIgniter\Filters\CSRF->before()
+ 4 SYSTEMPATH/Filters/Filters.php(221): CodeIgniter\Filters\Filters->runBefore()
+ 5 SYSTEMPATH/CodeIgniter.php(488): CodeIgniter\Filters\Filters->run()
+ 6 SYSTEMPATH/CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+ 7 SYSTEMPATH/Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+ 9 FCPATH/index.php(22): CodeIgniter\Boot::bootWeb()
+10 SYSTEMPATH/rewrite.php(44): require_once('/home/princy/Documents/ROJO/exam/projet_final_S4/public/index.php')
+CRITICAL - 2026-07-20 06:46:58 --> CodeIgniter\Security\Exceptions\SecurityException: The action you requested is not allowed.
+[Method: POST, Route: client/login]
+in SYSTEMPATH/Security/Security.php on line 258.
+ 1 SYSTEMPATH/Security/Security.php(258): CodeIgniter\Security\Exceptions\SecurityException::forDisallowedAction()
+ 2 SYSTEMPATH/Filters/CSRF.php(52): CodeIgniter\Security\Security->verify()
+ 3 SYSTEMPATH/Filters/Filters.php(241): CodeIgniter\Filters\CSRF->before()
+ 4 SYSTEMPATH/Filters/Filters.php(221): CodeIgniter\Filters\Filters->runBefore()
+ 5 SYSTEMPATH/CodeIgniter.php(488): CodeIgniter\Filters\Filters->run()
+ 6 SYSTEMPATH/CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+ 7 SYSTEMPATH/Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+ 9 FCPATH/index.php(22): CodeIgniter\Boot::bootWeb()
+10 SYSTEMPATH/rewrite.php(44): require_once('/home/princy/Documents/ROJO/exam/projet_final_S4/public/index.php')
+CRITICAL - 2026-07-20 06:46:58 --> CodeIgniter\Security\Exceptions\SecurityException: The action you requested is not allowed.
+[Method: POST, Route: client/depot]
+in SYSTEMPATH/Security/Security.php on line 258.
+ 1 SYSTEMPATH/Security/Security.php(258): CodeIgniter\Security\Exceptions\SecurityException::forDisallowedAction()
+ 2 SYSTEMPATH/Filters/CSRF.php(52): CodeIgniter\Security\Security->verify()
+ 3 SYSTEMPATH/Filters/Filters.php(241): CodeIgniter\Filters\CSRF->before()
+ 4 SYSTEMPATH/Filters/Filters.php(221): CodeIgniter\Filters\Filters->runBefore()
+ 5 SYSTEMPATH/CodeIgniter.php(488): CodeIgniter\Filters\Filters->run()
+ 6 SYSTEMPATH/CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+ 7 SYSTEMPATH/Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+ 9 FCPATH/index.php(22): CodeIgniter\Boot::bootWeb()
+10 SYSTEMPATH/rewrite.php(44): require_once('/home/princy/Documents/ROJO/exam/projet_final_S4/public/index.php')
+CRITICAL - 2026-07-20 06:46:58 --> CodeIgniter\Security\Exceptions\SecurityException: The action you requested is not allowed.
+[Method: POST, Route: client/depot]
+in SYSTEMPATH/Security/Security.php on line 258.
+ 1 SYSTEMPATH/Security/Security.php(258): CodeIgniter\Security\Exceptions\SecurityException::forDisallowedAction()
+ 2 SYSTEMPATH/Filters/CSRF.php(52): CodeIgniter\Security\Security->verify()
+ 3 SYSTEMPATH/Filters/Filters.php(241): CodeIgniter\Filters\CSRF->before()
+ 4 SYSTEMPATH/Filters/Filters.php(221): CodeIgniter\Filters\Filters->runBefore()
+ 5 SYSTEMPATH/CodeIgniter.php(488): CodeIgniter\Filters\Filters->run()
+ 6 SYSTEMPATH/CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+ 7 SYSTEMPATH/Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+ 9 FCPATH/index.php(22): CodeIgniter\Boot::bootWeb()
+10 SYSTEMPATH/rewrite.php(44): require_once('/home/princy/Documents/ROJO/exam/projet_final_S4/public/index.php')
+CRITICAL - 2026-07-20 06:46:58 --> CodeIgniter\Security\Exceptions\SecurityException: The action you requested is not allowed.
+[Method: POST, Route: client/retrait]
+in SYSTEMPATH/Security/Security.php on line 258.
+ 1 SYSTEMPATH/Security/Security.php(258): CodeIgniter\Security\Exceptions\SecurityException::forDisallowedAction()
+ 2 SYSTEMPATH/Filters/CSRF.php(52): CodeIgniter\Security\Security->verify()
+ 3 SYSTEMPATH/Filters/Filters.php(241): CodeIgniter\Filters\CSRF->before()
+ 4 SYSTEMPATH/Filters/Filters.php(221): CodeIgniter\Filters\Filters->runBefore()
+ 5 SYSTEMPATH/CodeIgniter.php(488): CodeIgniter\Filters\Filters->run()
+ 6 SYSTEMPATH/CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+ 7 SYSTEMPATH/Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+ 9 FCPATH/index.php(22): CodeIgniter\Boot::bootWeb()
+10 SYSTEMPATH/rewrite.php(44): require_once('/home/princy/Documents/ROJO/exam/projet_final_S4/public/index.php')
+CRITICAL - 2026-07-20 06:46:58 --> CodeIgniter\Security\Exceptions\SecurityException: The action you requested is not allowed.
+[Method: POST, Route: client/retrait]
+in SYSTEMPATH/Security/Security.php on line 258.
+ 1 SYSTEMPATH/Security/Security.php(258): CodeIgniter\Security\Exceptions\SecurityException::forDisallowedAction()
+ 2 SYSTEMPATH/Filters/CSRF.php(52): CodeIgniter\Security\Security->verify()
+ 3 SYSTEMPATH/Filters/Filters.php(241): CodeIgniter\Filters\CSRF->before()
+ 4 SYSTEMPATH/Filters/Filters.php(221): CodeIgniter\Filters\Filters->runBefore()
+ 5 SYSTEMPATH/CodeIgniter.php(488): CodeIgniter\Filters\Filters->run()
+ 6 SYSTEMPATH/CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+ 7 SYSTEMPATH/Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+ 9 FCPATH/index.php(22): CodeIgniter\Boot::bootWeb()
+10 SYSTEMPATH/rewrite.php(44): require_once('/home/princy/Documents/ROJO/exam/projet_final_S4/public/index.php')
+CRITICAL - 2026-07-20 06:46:58 --> CodeIgniter\Security\Exceptions\SecurityException: The action you requested is not allowed.
+[Method: POST, Route: operateur/login]
+in SYSTEMPATH/Security/Security.php on line 258.
+ 1 SYSTEMPATH/Security/Security.php(258): CodeIgniter\Security\Exceptions\SecurityException::forDisallowedAction()
+ 2 SYSTEMPATH/Filters/CSRF.php(52): CodeIgniter\Security\Security->verify()
+ 3 SYSTEMPATH/Filters/Filters.php(241): CodeIgniter\Filters\CSRF->before()
+ 4 SYSTEMPATH/Filters/Filters.php(221): CodeIgniter\Filters\Filters->runBefore()
+ 5 SYSTEMPATH/CodeIgniter.php(488): CodeIgniter\Filters\Filters->run()
+ 6 SYSTEMPATH/CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+ 7 SYSTEMPATH/Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+ 9 FCPATH/index.php(22): CodeIgniter\Boot::bootWeb()
+10 SYSTEMPATH/rewrite.php(44): require_once('/home/princy/Documents/ROJO/exam/projet_final_S4/public/index.php')
+CRITICAL - 2026-07-20 06:47:55 --> CodeIgniter\Security\Exceptions\SecurityException: The action you requested is not allowed.
+[Method: POST, Route: client/depot]
+in SYSTEMPATH/Security/Security.php on line 258.
+ 1 SYSTEMPATH/Security/Security.php(258): CodeIgniter\Security\Exceptions\SecurityException::forDisallowedAction()
+ 2 SYSTEMPATH/Filters/CSRF.php(52): CodeIgniter\Security\Security->verify()
+ 3 SYSTEMPATH/Filters/Filters.php(241): CodeIgniter\Filters\CSRF->before()
+ 4 SYSTEMPATH/Filters/Filters.php(221): CodeIgniter\Filters\Filters->runBefore()
+ 5 SYSTEMPATH/CodeIgniter.php(488): CodeIgniter\Filters\Filters->run()
+ 6 SYSTEMPATH/CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+ 7 SYSTEMPATH/Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+ 9 FCPATH/index.php(22): CodeIgniter\Boot::bootWeb()
+10 SYSTEMPATH/rewrite.php(44): require_once('/home/princy/Documents/ROJO/exam/projet_final_S4/public/index.php')
+CRITICAL - 2026-07-20 06:47:55 --> CodeIgniter\Security\Exceptions\SecurityException: The action you requested is not allowed.
+[Method: POST, Route: client/retrait]
+in SYSTEMPATH/Security/Security.php on line 258.
+ 1 SYSTEMPATH/Security/Security.php(258): CodeIgniter\Security\Exceptions\SecurityException::forDisallowedAction()
+ 2 SYSTEMPATH/Filters/CSRF.php(52): CodeIgniter\Security\Security->verify()
+ 3 SYSTEMPATH/Filters/Filters.php(241): CodeIgniter\Filters\CSRF->before()
+ 4 SYSTEMPATH/Filters/Filters.php(221): CodeIgniter\Filters\Filters->runBefore()
+ 5 SYSTEMPATH/CodeIgniter.php(488): CodeIgniter\Filters\Filters->run()
+ 6 SYSTEMPATH/CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+ 7 SYSTEMPATH/Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+ 9 FCPATH/index.php(22): CodeIgniter\Boot::bootWeb()
+10 SYSTEMPATH/rewrite.php(44): require_once('/home/princy/Documents/ROJO/exam/projet_final_S4/public/index.php')
+CRITICAL - 2026-07-20 06:48:33 --> CodeIgniter\Security\Exceptions\SecurityException: The action you requested is not allowed.
+[Method: POST, Route: client/depot]
+in SYSTEMPATH/Security/Security.php on line 258.
+ 1 SYSTEMPATH/Security/Security.php(258): CodeIgniter\Security\Exceptions\SecurityException::forDisallowedAction()
+ 2 SYSTEMPATH/Filters/CSRF.php(52): CodeIgniter\Security\Security->verify()
+ 3 SYSTEMPATH/Filters/Filters.php(241): CodeIgniter\Filters\CSRF->before()
+ 4 SYSTEMPATH/Filters/Filters.php(221): CodeIgniter\Filters\Filters->runBefore()
+ 5 SYSTEMPATH/CodeIgniter.php(488): CodeIgniter\Filters\Filters->run()
+ 6 SYSTEMPATH/CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+ 7 SYSTEMPATH/Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+ 9 FCPATH/index.php(22): CodeIgniter\Boot::bootWeb()
+10 SYSTEMPATH/rewrite.php(44): require_once('/home/princy/Documents/ROJO/exam/projet_final_S4/public/index.php')
+CRITICAL - 2026-07-20 06:48:33 --> CodeIgniter\Security\Exceptions\SecurityException: The action you requested is not allowed.
+[Method: POST, Route: client/retrait]
+in SYSTEMPATH/Security/Security.php on line 258.
+ 1 SYSTEMPATH/Security/Security.php(258): CodeIgniter\Security\Exceptions\SecurityException::forDisallowedAction()
+ 2 SYSTEMPATH/Filters/CSRF.php(52): CodeIgniter\Security\Security->verify()
+ 3 SYSTEMPATH/Filters/Filters.php(241): CodeIgniter\Filters\CSRF->before()
+ 4 SYSTEMPATH/Filters/Filters.php(221): CodeIgniter\Filters\Filters->runBefore()
+ 5 SYSTEMPATH/CodeIgniter.php(488): CodeIgniter\Filters\Filters->run()
+ 6 SYSTEMPATH/CodeIgniter.php(363): CodeIgniter\CodeIgniter->handleRequest()
+ 7 SYSTEMPATH/Boot.php(417): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH/Boot.php(68): CodeIgniter\Boot::runCodeIgniter()
+ 9 FCPATH/index.php(22): CodeIgniter\Boot::bootWeb()
+10 SYSTEMPATH/rewrite.php(44): require_once('/home/princy/Documents/ROJO/exam/projet_final_S4/public/index.php')
