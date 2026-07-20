@@ -46,20 +46,30 @@
             </div>
           </form>
           
-          <!-- Prefixes indicatifs -->
-          <div class="mt-4 p-3 rounded-3" style="background:var(--bg)">
-            <p class="text-muted mb-2" style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em">
-              test : 0340001234<br>
-              Prefixes valides
+          <!-- Préfixes acceptés (MON opérateur uniquement) -->
+          <?php if (isset($monOperateur) && $monOperateur): ?>
+          <div class="mt-4 p-3 rounded-3" style="background:#ecfdf5;border:2px solid #06b6d4">
+            <p class="mb-2" style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#0e7490">
+              <i class="bi bi-info-circle me-1"></i>Préfixes acceptés
             </p>
+            <div class="mb-2">
+              <strong style="font-size:1.1rem;color:#0891b2"><?= esc($monOperateur['nom_operateur']) ?></strong>
+            </div>
             <div class="d-flex gap-2 flex-wrap">
-              <?php foreach ([['034','Telma','#0D9B8C'],['033','Airtel','#0891B2'],['032','Orange','#F59E0B']] as [$p,$n,$c]): ?>
-                <span class="badge rounded-pill px-3 py-2" style="background:<?= $c ?>22;color:<?= $c ?>;font-size:.78rem">
-                  <strong><?= $p ?></strong> &mdash; <?= $n ?>
+              <?php 
+                $prefixes = array_map('trim', explode(',', $monOperateur['prefixe_operateur']));
+                foreach ($prefixes as $p): 
+              ?>
+                <span class="badge rounded-pill px-3 py-2" style="background:#06b6d4;color:#fff;font-size:.85rem">
+                  <strong><?= esc($p) ?></strong>
                 </span>
               <?php endforeach; ?>
             </div>
+            <p class="text-muted small mt-2 mb-0">
+              Exemple : <?= esc($prefixes[0] ?? '034') ?>0001234
+            </p>
           </div>
+          <?php endif; ?>
 
         </div>
 

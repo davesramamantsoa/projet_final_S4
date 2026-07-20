@@ -48,24 +48,22 @@
                         });
                         </script>
 
-                        <!-- Tableau barèmes indicatif -->
+                        <!-- Tableau barèmes dynamique -->
+                        <?php if (!empty($baremes)): ?>
                         <div class="table-responsive mb-4">
                             <table class="table table-sm fee-table">
                                 <thead><tr><th>Tranche</th><th>Frais</th></tr></thead>
                                 <tbody>
-                                    <tr><td>100 — 1 000 Ar</td><td>50 Ar</td></tr>
-                                    <tr><td>1 001 — 5 000 Ar</td><td>50 Ar</td></tr>
-                                    <tr><td>5 001 — 10 000 Ar</td><td>100 Ar</td></tr>
-                                    <tr><td>10 001 — 25 000 Ar</td><td>200 Ar</td></tr>
-                                    <tr><td>25 001 — 50 000 Ar</td><td>400 Ar</td></tr>
-                                    <tr><td>50 001 — 100 000 Ar</td><td>800 Ar</td></tr>
-                                    <tr><td>100 001 — 250 000 Ar</td><td>1 500 Ar</td></tr>
-                                    <tr><td>250 001 — 500 000 Ar</td><td>1 500 Ar</td></tr>
-                                    <tr><td>500 001 — 1 000 000 Ar</td><td>2 500 Ar</td></tr>
-                                    <tr><td>1 000 001 — 2 000 000 Ar</td><td>3 000 Ar</td></tr>
+                                    <?php foreach ($baremes as $b): ?>
+                                    <tr>
+                                        <td><?= number_format($b['montant_min'], 0, ',', ' ') ?> — <?= number_format($b['montant_max'], 0, ',', ' ') ?> Ar</td>
+                                        <td class="fw-semibold"><?= number_format($b['montant_frais'], 0, ',', ' ') ?> Ar</td>
+                                    </tr>
+                                    <?php endforeach; ?>
                                 </tbody>
                             </table>
                         </div>
+                        <?php endif; ?>
 
                         <div class="d-grid">
                             <button type="submit" class="btn btn-danger btn-lg"

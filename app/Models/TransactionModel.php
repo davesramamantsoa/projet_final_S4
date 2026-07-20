@@ -50,14 +50,24 @@ class TransactionModel extends Model
 
     public function getTransactionsUtilisateur(int $utilisateurId, int $limit = 50, int $offset = 0): array
     {
-        return $this->db->table('transactions t')
+        // Récupérer le numéro de téléphone de l'utilisateur
+        $userModel = new \App\Models\UtilisateurModel();
+        $user = $userModel->find($utilisateurId);
+        $monNumero = $user['numero_telephone'] ?? '';
+        
+        // Récupérer transactions où je suis l'expéditeur OU le destinataire
+        $builder = $this->db->table('transactions t')
             ->select('t.*, type_op.nom_operation, op.nom_operateur, op.prefixe_operateur')
             ->join('types_operations type_op', 't.type_operation_id = type_op.id')
-            ->join('operateurs op',            'type_op.operateur_id = op.id')
-            ->where('t.utilisateur_id', $utilisateurId)
+            ->join('operateurs op', 'type_op.operateur_id = op.id')
+            ->groupStart()
+                ->where('t.utilisateur_id', $utilisateurId)
+                ->orWhere('t.telephone_destinataire', $monNumero)
+            ->groupEnd()
             ->orderBy('t.date_creation', 'DESC')
-            ->limit($limit, $offset)
-            ->get()->getResultArray();
+            ->limit($limit, $offset);
+        
+        return $builder->get()->getResultArray();
     }
 
     public function countTransactionsUtilisateur(int $utilisateurId): int

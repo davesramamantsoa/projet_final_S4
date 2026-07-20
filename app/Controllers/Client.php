@@ -41,7 +41,12 @@ class Client extends BaseController
         if (session()->get('user_type') === 'client') {
             return redirect()->to(base_url('client/dashboard'));
         }
-        return view('client/login');
+        
+        // Récupérer MON opérateur pour afficher les préfixes acceptés
+        $operateurs = $this->operateurModel->findAll();
+        $monOperateur = $operateurs[0] ?? null;
+        
+        return view('client/login', ['monOperateur' => $monOperateur]);
     }
 
     public function login()
@@ -52,8 +57,24 @@ class Client extends BaseController
             return redirect()->back()->with('error', 'Veuillez entrer votre numéro de téléphone.');
         }
 
-        $numero    = preg_replace('/\s+/', '', $numero);
+        $numero = preg_replace('/\s+/', '', $numero);
+        
+        // Récupérer MON opérateur (le premier dans la liste)
+        $operateurs = $this->operateurModel->findAll();
+        $monOperateur = $operateurs[0] ?? null;
+        
+        if (!$monOperateur) {
+            return redirect()->back()->with('error', 'Système non configuré.');
+        }
+        
+        // Vérifier que le numéro correspond aux préfixes de MON opérateur
         $operateur = $this->operateurModel->detecterParTelephone($numero);
+        
+        if (!$operateur || $operateur['id'] != $monOperateur['id']) {
+            return redirect()->back()->with('error', 
+                "Accès refusé. Seuls les numéros {$monOperateur['nom_operateur']} ({$monOperateur['prefixe_operateur']}) peuvent se connecter."
+            );
+        }
 
         $utilisateur = $this->utilisateurModel->creerOuGetUtilisateur($numero);
         if (!$utilisateur) {
@@ -64,8 +85,8 @@ class Client extends BaseController
             'user_id'           => $utilisateur['id'],
             'numero_telephone'  => $utilisateur['numero_telephone'],
             'user_type'         => 'client',
-            'operateur_id'      => $operateur['id']               ?? null,
-            'prefixe_operateur' => $operateur['prefixe_operateur'] ?? null,
+            'operateur_id'      => $operateur['id'],
+            'prefixe_operateur' => $operateur['prefixe_operateur'],
         ]);
 
         return redirect()->to(base_url('client/dashboard'))->with('success', 'Bienvenue !');

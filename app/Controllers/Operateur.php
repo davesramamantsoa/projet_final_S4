@@ -75,6 +75,14 @@ class Operateur extends BaseController
         ]);
     }
 
+    public function config()
+    {
+        $operateurs = $this->operateurModel->findAll();
+        return view('operateur/config', [
+            'operateurs' => $operateurs,
+        ]);
+    }
+
     public function creer()
     {
         if ($this->request->is('get')) {
@@ -252,17 +260,21 @@ class Operateur extends BaseController
 
     public function clients()
     {
-        $operateurs          = $this->operateurModel->findAll();
-        $clientsParOperateur = [];
-
-        foreach ($operateurs as $op) {
-            $clients = $this->utilisateurModel->getUtilisateursByPrefixe($op['prefixe_operateur']);
-            $clientsParOperateur[] = [
-                'operateur'    => $op,
-                'clients'      => $clients,
-                'total_soldes' => array_sum(array_column($clients, 'solde')),
-            ];
+        // Afficher seulement les clients de MON opérateur (le premier)
+        $operateurs = $this->operateurModel->findAll();
+        $monOperateur = $operateurs[0] ?? null;
+        
+        if (!$monOperateur) {
+            return redirect()->to(base_url('operateur/dashboard'))
+                ->with('error', 'Aucun opérateur configuré.');
         }
+
+        $clients = $this->utilisateurModel->getUtilisateursByPrefixe($monOperateur['prefixe_operateur']);
+        $clientsParOperateur = [[
+            'operateur'    => $monOperateur,
+            'clients'      => $clients,
+            'total_soldes' => array_sum(array_column($clients, 'solde')),
+        ]];
 
         return view('operateur/clients', ['clientsParOperateur' => $clientsParOperateur]);
     }

@@ -31,6 +31,7 @@ $routes->match(['get', 'post'], 'operateur/creer', 'Operateur::creer');
 
 $routes->group('operateur', ['filter' => 'operateurAuth'], function ($routes) {
     $routes->get('dashboard',                     'Operateur::dashboard');
+    $routes->get('config',                        'Operateur::config');
     $routes->match(['get', 'post'], 'editer/(:num)', 'Operateur::editer/$1');
     $routes->get('types/(:num)',                  'Operateur::types/$1');
     $routes->match(['get', 'post'], 'baremes/(:num)', 'Operateur::baremes/$1');

@@ -1,101 +1,229 @@
-# Tâches — Projet Final S4
+# Répartition des Tâches — Projet Final S4
 ## Application Mobile Money — CodeIgniter 4 + SQLite
 
 **Binôme :**
-| # | Nom | Matricule |
-|---|-----|-----------|
-| 1 | **Mirindra** | 3927 |
-| 2 | **Dave** | 4213 |
+| # | Nom | Rôle principal |
+|---|-----|----------------|
+| 1 | **Mirindra** | Base de données · Modèles · Logique métier |
+| 2 | **Dave** | Contrôleurs · Vues · Design UI |
 
 ---
 
-## ✅ Fonctionnalités Principales
-
-### Base de Données
-- [x] 6 tables : utilisateurs, operateurs, types_operations, baremes_frais, transactions, historique_soldes
-- [x] Support multi-préfixes par opérateur
-- [x] Champs username/password pour login séparé par opérateur
-- [x] Commission externe configurable par opérateur
-
-### Espace Client
-- [x] Connexion automatique par numéro
-- [x] Dépôt d'argent (frais = 0)
-- [x] Retrait avec calcul frais
-- [x] Transfert simple
-- [x] **Transfert multiple** (même opérateur uniquement)
-- [x] **Option "Inclure frais de retrait"** (autres opérateurs uniquement)
-- [x] Historique complet
-
-### Espace Opérateur
-- [x] **3 dashboards séparés** (Telma, Airtel, Orange)
-- [x] Login avec username/password propre à chaque opérateur
-- [x] Configuration multi-préfixes (ex: 034, 038)
-- [x] Configuration commission externe (%)
-- [x] Statistiques avec séparation des gains :
-  - Gains retrait (%)
-  - Gains transfert interne (%)
-  - Gains transfert externe (%)
-- [x] **Montants à envoyer** aux autres opérateurs avec %
-- [x] Gestion barèmes de frais
-- [x] Liste clients
+## 📌 Version 1 — Fonctionnalités de base ✅
 
 ---
 
-## 💰 Règles de Calcul
+##  Mirindra(3927)
 
-### Commission
-- **C'est l'opérateur DESTINATAIRE qui prend la commission**
-- Exemple : Telma → Orange (1%), commission va à Orange
+### Base de données & Schéma
+- [ok] Conception du schéma relationnel SQLite en français
+- [ok] Création du fichier `database.sql` avec les 6 tables :
+  - `utilisateurs` — login automatique par numéro de téléphone
+  - `operateurs` — gestion des préfixes (034, 033, 032…)
+  - `types_operations` — depot / retrait / transfert par opérateur
+  - `baremes_frais` — tranches de montants avec frais associés
+  - `transactions` — enregistrement de toutes les opérations
+  - `historique_soldes` — traçabilité des mouvements de solde
+- [ok] Création de la migration CI4 : `2024-01-01-000001_CreerToutesLesTables.php`
+- [ok] Ajout des index de performance (telephone, date, utilisateur)
 
-### Transfert Externe
-```
-Débité = Montant + Frais transfert + Commission dest. + Frais retrait (si option)
-Reçu = Montant (+ Frais retrait si option)
-```
+### Seeder & Données de démonstration
+- [ok] `DatabaseSeeder.php` — données initiales complètes :
+  - 3 opérateurs : Telma (034), Airtel (033), Orange (032)
+  - Barèmes par défaut pour tous les types d'opérations
+  - 4 clients de démonstration avec soldes préchargés
+  - 9 transactions de démonstration (dépôts, retraits, transferts)
 
-### Montants à Envoyer
-```
-Opérateur expéditeur doit envoyer :
-- Le montant transféré
-- + Les frais de retrait (si option cochée)
-```
+### Modèles (app/Models/)
+- [ok] `UtilisateurModel.php`
+  - `creerOuGetUtilisateur()` — auto-inscription sans mot de passe
+  - `mettreAJourSolde()` — crédit / débit avec vérification solde
+  - `getUtilisateursByPrefixe()` — situation comptes clients par opérateur
+- [ok] `OperateurModel.php`
+  - `detecterParTelephone()` — détection opérateur par préfixe du numéro
+  - `prefixeExiste()` — validation unicité préfixe
+  - `creerOperateur()` — création sécurisée
+- [ok] `TypeOperationModel.php`
+  - `getByOperateurEtType()` — récupération ciblée du type
+  - `creerTypesParDefaut()` — initialisation automatique des 3 types
+- [ok] `BaremeFraisModel.php`
+  - `calculerFrais()` — calcul automatique selon la tranche de montant
+  - `creerBaremesParDefaut()` — barèmes du sujet (frais 0 pour dépôt)
+- [ok] `TransactionModel.php`
+  - `creerTransaction()` — enregistrement avec référence unique
+  - `getTransactionsUtilisateur()` — JOIN multi-tables (transaction → type → opérateur)
+  - `getTransactionsOperateur()` — vue complète pour l'espace opérateur
+  - `getStatsOperateur()` — calcul gains retrait + transfert avec filtre dates
+  - `genererReference()` — référence unique `TXN` + hex + timestamp
+- [ok] `HistoriqueSoldeModel.php`
+  - `enregistrer()` — traçabilité solde avant / après chaque opération
 
-### Gains
-- **Frais transfert** → Opérateur expéditeur
-- **Commission** → Opérateur destinataire
+### Logique métier
+- [ok] Règle dépôt : `solde += montant` (frais = 0 Ar)
+- [ok] Règle retrait : `solde -= (montant + frais)`
+- [ok] Règle transfert : `expéditeur -= (montant + frais)` / `destinataire += montant`
+- [ok] Validation montant minimum 100 Ar sur toutes les opérations
+- [ok] Vérification solde suffisant avant retrait et transfert
+
+### Configuration
+- [ok] `app/Config/Database.php` — connexion SQLite3 (`WRITEPATH/database/money.db`)
+- [ok] `app/Config/Paths.php` — chemins CI4
+- [ok] `app/Config/Filters.php` — enregistrement des filtres d'authentification
+- [ok] `app/Filters/ClientAuth.php` — protection routes espace client
+- [ok] `app/Filters/OperateurAuth.php` — protection routes espace opérateur
 
 ---
 
-## 📁 Structure
+## Dave(4213)
 
-```
-app/
-├── Controllers/
-│   ├── Client.php (transfert multiple + frais retrait)
-│   └── Operateur.php (login séparé, stats par opérateur)
-├── Models/
-│   ├── OperateurModel.php (multi-préfixes, username/password)
-│   └── TransactionModel.php (séparation gains, montants à envoyer)
-└── Views/
-    ├── client/transfert.php (envoi multiple, option frais)
-    ├── operateur/dashboard.php (dashboard personnel)
-    └── operateur/statistiques.php (gains séparés avec %)
-```
+### Contrôleurs (app/Controllers/)
+- [ok] `BaseController.php` — classe de base, chargement helpers (`url`, `form`, `text`)
+- [ok] `Home.php` — page d'accueil
+- [ok] `Client.php` — espace client complet :
+  - `index()` / `login()` / `logout()` — connexion automatique par téléphone
+  - `dashboard()` — solde + 5 dernières transactions
+  - `depot()` — dépôt automatique avec historique solde
+  - `retrait()` — retrait avec calcul frais et vérification solde
+  - `transfert()` — transfert inter-comptes avec création auto du destinataire
+  - `historique()` — pagination des transactions (20 par page)
+- [ok] `Operateur.php` — espace administration complet :
+  - `index()` / `login()` / `logout()` — auth via `.env` (sans table DB)
+  - `dashboard()` — vue globale de tous les opérateurs + métriques
+  - `creer()` — création d'un opérateur avec préfixe + types par défaut
+  - `types()` — vue des 3 types d'opérations avec leurs barèmes
+  - `baremes()` — modification des frais par tranche
+  - `ajouterBareme()` / `supprimerBareme()` — gestion CRUD des barèmes
+  - `statistiques()` — gains retrait / transfert avec filtre de dates
+  - `clients()` — situation des comptes clients par opérateur
+
+### Routes (app/Config/Routes.php)
+- [ok] Routes espace client avec filtre `clientAuth`
+- [ok] Routes espace opérateur avec filtre `operateurAuth`
+- [ok] Routes groupées CI4 pour protéger les pages authentifiées
+
+### Vues — Espace Client (app/Views/client/)
+- [ok] `login.php` — connexion automatique par numéro, préfixes affichés
+- [ok] `dashboard.php` — carte solde gradient + 4 boutons actions + tableau transactions
+- [ok] `depot.php` — formulaire opérateur + montant, info frais = 0
+- [ok] `retrait.php` — formulaire avec tableau barèmes indicatif, solde affiché
+- [ok] `transfert.php` — formulaire numéro destinataire + montant + opérateur
+- [ok] `historique.php` — tableau complet avec pagination
+
+### Vues — Espace Opérateur (app/Views/operateur/)
+- [ok] `login.php` — connexion admin avec toggle mot de passe
+- [ok] `dashboard.php` — métriques par opérateur : transactions, volume, gains retrait/transfert
+- [ok] `creer.php` — formulaire création opérateur + préfixe
+- [ok] `types.php` — tableau des 3 types avec leurs barèmes par opérateur
+- [ok] `baremes.php` — tableau éditable des frais + ajout / suppression de tranche
+- [ok] `statistiques.php` — KPIs gains, filtre dates, tableau 50 dernières transactions
+- [ok] `clients.php` — comptes clients groupés par opérateur avec total soldes
+
+### Vues — Layouts (app/Views/layouts/)
+- [ok] `header.php` — navbar responsive 3 états (anonyme / client / opérateur), flashdata
+- [ok] `footer.php` — footer sombre, Bootstrap JS, auto-dismiss alertes 5s
+
+### Page d'accueil (app/Views/home.php)
+- [ok] Hero section avec fond dégradé teal-nuit
+- [ok] Deux cards glassmorphism (Espace Client / Espace Opérateur)
+- [ok] Liste des opérateurs disponibles avec préfixes colorés
 
 ---
 
-## 🔑 Identifiants
-
-```
-Telma  : telma  / telma123
-Airtel : airtel / airtel123
-Orange : orange / orange123
-```
+## Version 2 — Fonctionnalités avancées 
 
 ---
 
-## 📝 Documentation
+##  Mirindra(3927)
 
-- `README.md` : Installation et présentation
-- `CALCULS.md` : Exemples détaillés de calculs
-- `database.sql` : Schéma complet
+### Base de données & Migrations V2
+- [ok] Migration `2024-01-02-000001_AjouterCommissionTransfertExterne.php` — ajout colonne `commission_transfert_externe`
+- [ok] Migration `2024-01-03-000001_AjouterCommissionSortante.php` — ajout colonne `commission_sortante` (REAL, default 0) pour la commission supplémentaire sur transferts sortants vers autres opérateurs
+- [ok] Migration `2024-01-04-000001_CreerConfigPrefixesAutresOperateurs.php` — table `config_prefixes_autres_operateurs` (operateur_id, prefixe, operateur_destinataire_id)
+  - Permet de mapper les préfixes des autres opérateurs (ex: pour un opérateur Telma, dire que 032 et 031 = Orange)
+
+### Seeder V2
+- [ok] Mise à jour de `DatabaseSeeder.php` :
+  - Ajout `commission_sortante` pour chaque opérateur (ex: Telma 1.5%, Airtel 1%, Orange 2%)
+  - Insertion des configurations de préfixes des autres opérateurs
+  - Ajout de transactions de démonstration avec transferts vers d'autres opérateurs (032→033, etc.)
+  - Ajustement des montants/envoyés et commissions externes sur les transactions existantes
+
+### Modèles — Nouveaux & Mise à jour
+- [ok] `ConfigPrefixeAutreOperateurModel.php` — nouveau modèle :
+  - `getByOperateur(int $operateurId)` — récupérer toutes les configs de mapping pour un opérateur
+  - `getOperateurDestinataire(int $operateurId, string $prefixe)` — trouver l'opérateur destinataire à partir d'un préfixe configuré
+  - `ajouterMapping(int $operateurId, string $prefixe, int $operateurDestId)` — ajouter un mapping
+  - `supprimerMapping(int $id)` — supprimer un mapping
+  - `existeDeja(int $operateurId, string $prefixe)` — vérifier si un mapping existe déjà
+- [ok] `OperateurModel.php` — mise à jour :
+  - `getAllOperateursSauf(int $excludeId)` — récupérer tous les autres opérateurs (pour la page config)
+- [ok] `TransactionModel.php` — mise à jour `getStatsOperateur()` :
+  - Utiliser `commission_sortante` dans les calculs des gains pour transfert vers autres opérateurs
+  - Améliorer la séparation : opérateur courant vs autres opérateurs dans la "Situation des gains"
+
+### Logique métier V2
+- [ok] Transfert sortant vers autre opérateur : `commission_sortante` = montant × (commission_sortante_% / 100) ajouté aux frais
+- [ok] Le montant à envoyer à l'autre opérateur inclus la commission sortante
+- [ok] Affichage séparé dans "Situation des gains" : colonne "Opérateur" et "Autres opérateurs"
+
+---
+
+## Dave(4213)
+
+### Contrôleurs V2
+- [ok] `Operateur.php` — ajout méthode `config()` :
+  - `GET /operateur/config` — afficher la page de configuration
+  - `POST /operateur/config` — sauvegarder la commission sortante + les mappings de préfixes des autres opérateurs
+- [ok] `Client.php` — mise à jour `transfert()` :
+  - Utiliser `commission_sortante` de l'opérateur émetteur au lieu de `commission_transfert_externe` (qui est la commission pour l'opérateur récepteur)
+  - Réserver `commission_transfert_externe` pour la commission que l'opérateur récepteur reçoit
+
+### Routes V2
+- [ok] `app/Config/Routes.php` — ajout :
+  ```php
+  $routes->match(['get', 'post'], 'operateur/config', 'Operateur::config');
+  ```
+
+### Vues V2 — Espace Opérateur (app/Views/operateur/)
+- [ok] `config.php` — nouvelle page de configuration avec :
+  - **Section 1 : Commission sortante**
+    - Champ pour définir le % de commission supplémentaire sur les transferts vers d'autres opérateurs
+  - **Section 2 : Mapping des préfixes des autres opérateurs**
+    - Tableau listant les mappings déjà configurés (ex: "032 → Orange", "031 → Orange")
+    - Formulaire pour ajouter un nouveau mapping (sélectionner opérateur destinataire + entrer un préfixe)
+    - Bouton pour supprimer un mapping
+  - **Info :** explication claire que ces configurations sont valables pour tous les opérateurs
+- [ok] `statistiques.php` — mise à jour :
+  - Dans la carte "Situation des gains", **séparer visuellement** :
+    - Une colonne "Votre opérateur" (gains retrait + gains transfert même opérateur)
+    - Une colonne "Autres opérateurs" (gains transfert autre opérateur + commissions reçues)
+  - Ajouter une carte "Situation des montants à envoyer à chaque opérateur" avec :
+    - Liste détaillée des montants dus par opérateur destinataire
+    - Total général à envoyer
+- [ok] `dashboard.php` — mise à jour :
+  - Ajouter un lien vers la page de configuration `/operateur/config`
+  - Afficher la commission sortante dans les infos de l'opérateur
+- [ok] `editer.php` — mise à jour :
+  - Ajouter champ "Commission sortante (%)" dans le formulaire d'édition
+
+### Vues V2 — Espace Client
+- [ok] `transfert.php` — déjà fait (option inclure frais de retrait + envoi multiple)
+- [ ] `retrait.php` — déjà fait (pas de frais de retrait pour les autres opérateurs lors des transferts)
+
+### Vues — Layouts
+- [ok] `header.php` — mise à jour du lien "Configuration" si nécessaire
+
+---
+
+- [ok] Option "Inclure frais de retrait" lors de l'envoi (client)
+- [ok] Pas de frais de retrait pour les autres opérateurs (destinataires)
+- [ok] Envoi multiple vers plusieurs numéros (même opérateur uniquement)
+- [ok] Multi-préfixes (034, 038)
+- [ok] Commission configurable pour les transferts entrants
+- [ok] Gains retrait / transfert séparés dans les statistiques
+- [ok] Montants à envoyer par opérateur (dashboard + statistiques)
+
+---
+
+
+

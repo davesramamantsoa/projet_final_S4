@@ -26,6 +26,7 @@
             <tr>
               <th class="ps-4">Reference</th>
               <th>Type</th>
+              <th>Sens</th>
               <th>Montant</th>
               <th>Frais</th>
               <th>De/Vers</th>
@@ -34,13 +35,22 @@
             </tr>
           </thead>
           <tbody>
-          <?php foreach ($transactions as $tx):
-            $cfg = match($tx['nom_operation']) {
-              'depot'     => ['badge-depot',     'bi-arrow-down-circle-fill', 'Depot'],
-              'retrait'   => ['badge-retrait',   'bi-arrow-up-circle-fill',   'Retrait'],
-              'transfert' => ['badge-transfert', 'bi-send-fill',              'Transfert'],
-              default     => ['badge-secondary', 'bi-circle',                 $tx['nom_operation']],
-            };
+          <?php 
+            $monNumero = session()->get('numero_telephone');
+            $monUserId = session()->get('user_id');
+            foreach ($transactions as $tx):
+              // Pour un transfert:
+              // - ENVOI : frais > 0 (je paie les frais), telephone_destinataire = destinataire
+              // - RÉCEPTION : frais == 0 (pas de frais pour celui qui reçoit), telephone_destinataire = expéditeur
+              $estEnvoi = ($tx['nom_operation'] === 'transfert' && $tx['frais'] > 0);
+              $estReception = ($tx['nom_operation'] === 'transfert' && $tx['frais'] == 0);
+              
+              $cfg = match($tx['nom_operation']) {
+                'depot'     => ['badge-depot',     'bi-arrow-down-circle-fill', 'Depot'],
+                'retrait'   => ['badge-retrait',   'bi-arrow-up-circle-fill',   'Retrait'],
+                'transfert' => ['badge-transfert', 'bi-send-fill',              'Transfert'],
+                default     => ['badge-secondary', 'bi-circle',                 $tx['nom_operation']],
+              };
           ?>
             <tr>
               <td class="ps-4">
@@ -49,11 +59,28 @@
                 </code>
               </td>
               <td><span class="badge <?= $cfg[0] ?>"><i class="bi <?= $cfg[1] ?>"></i> <?= $cfg[2] ?></span></td>
+              <td>
+                <?php if ($tx['nom_operation'] === 'transfert'): ?>
+                  <?php if ($estEnvoi): ?>
+                    <span class="badge" style="background:#dc2626;color:#fff"><i class="bi bi-arrow-up"></i> Envoi</span>
+                  <?php else: ?>
+                    <span class="badge" style="background:#16a34a;color:#fff"><i class="bi bi-arrow-down"></i> Reçu</span>
+                  <?php endif; ?>
+                <?php else: ?>
+                  <span class="text-muted small">—</span>
+                <?php endif; ?>
+              </td>
               <td class="fw-700"><?= number_format((float)$tx['montant'], 0, ',', ' ') ?> <span class="text-muted fw-400 small">Ar</span></td>
               <td class="<?= $tx['frais'] > 0 ? 'text-danger fw-600' : 'text-muted' ?>"><?= number_format((float)$tx['frais'], 0, ',', ' ') ?> Ar</td>
               <td class="small">
-                <?php if ($tx['telephone_destinataire']): ?>
-                  <i class="bi bi-arrow-right text-danger me-1"></i><?= esc($tx['telephone_destinataire']) ?>
+                <?php if ($tx['nom_operation'] === 'transfert'): ?>
+                  <?php if ($estEnvoi && $tx['telephone_destinataire']): ?>
+                    <i class="bi bi-arrow-right text-danger me-1"></i>Vers: <?= esc($tx['telephone_destinataire']) ?>
+                  <?php elseif ($estReception && $tx['telephone_destinataire']): ?>
+                    <i class="bi bi-arrow-left text-success me-1"></i>De: <?= esc($tx['telephone_destinataire']) ?>
+                  <?php else: ?>
+                    <span class="text-muted">—</span>
+                  <?php endif; ?>
                 <?php else: ?>
                   <span class="text-muted">—</span>
                 <?php endif; ?>
