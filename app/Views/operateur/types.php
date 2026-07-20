@@ -41,7 +41,7 @@
                                         <?= number_format($b['montant_max'], 0, ',', ' ') ?> Ar
                                     </td>
                                     <td class="small fw-semibold">
-                                        <span class="badge bg-operator"><?= number_format($b['montant_frais'], 0, ',', ' ') ?> Ar</span>
+                                        <span><?= number_format($b['montant_frais'], 0, ',', ' ') ?> Ar</span>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
