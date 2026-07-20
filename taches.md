@@ -1,6 +1,6 @@
 ## todo list du projet Final
-architecture d projet:
-conception et creation de base de donne:
+-architecture du projet:
+-conception et creation de base de donne:
 ```sql
 CREATE TABLE IF NOT EXISTS utilisateurs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -54,3 +54,18 @@ CREATE TABLE IF NOT EXISTS historique_soldes (
     FOREIGN KEY (transaction_id) REFERENCES transactions(id)
 );
 ```
+-insertion de donne de test:
+    -operateurs(Orange,Telma,Airtel)
+    -tranche de baremes de frais
+### cote client:
+    -page de login automatique
+        insertion du numero
+    -page de consulation de solde
+    -formulaire d operation(depot,transfert,retrait)
+## cote operateur:
+    -interface de configuration de prefixe valable de l operateur
+    -CRUD des baremes avec frais
+    -Calcul la situation des gains (Somme des frais perçus)
+    -Affichage la situation globale des comptes clients
+
+
