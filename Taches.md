@@ -12,61 +12,61 @@
 ## Étudiant 1 — Mirindra
 
 ### Base de données & Schéma
-- [x] Conception du schéma relationnel SQLite en français
-- [x] Création du fichier `database.sql` avec les 6 tables :
+- [ok] Conception du schéma relationnel SQLite en français
+- [ok] Création du fichier `database.sql` avec les 6 tables :
   - `utilisateurs` — login automatique par numéro de téléphone
   - `operateurs` — gestion des préfixes (034, 033, 032…)
   - `types_operations` — depot / retrait / transfert par opérateur
   - `baremes_frais` — tranches de montants avec frais associés
   - `transactions` — enregistrement de toutes les opérations
   - `historique_soldes` — traçabilité des mouvements de solde
-- [x] Création de la migration CI4 : `2024-01-01-000001_CreerToutesLesTables.php`
-- [x] Ajout des index de performance (telephone, date, utilisateur)
+- [ok] Création de la migration CI4 : `2024-01-01-000001_CreerToutesLesTables.php`
+- [ok] Ajout des index de performance (telephone, date, utilisateur)
 
 ### Seeder & Données de démonstration
-- [x] `DatabaseSeeder.php` — données initiales complètes :
+- [ok] `DatabaseSeeder.php` — données initiales complètes :
   - 3 opérateurs : Telma (034), Airtel (033), Orange (032)
   - Barèmes par défaut pour tous les types d'opérations
   - 4 clients de démonstration avec soldes préchargés
   - 9 transactions de démonstration (dépôts, retraits, transferts)
 
 ### Modèles (app/Models/)
-- [x] `UtilisateurModel.php`
+- [ok] `UtilisateurModel.php`
   - `creerOuGetUtilisateur()` — auto-inscription sans mot de passe
   - `mettreAJourSolde()` — crédit / débit avec vérification solde
   - `getUtilisateursByPrefixe()` — situation comptes clients par opérateur
-- [x] `OperateurModel.php`
+- [ok] `OperateurModel.php`
   - `detecterParTelephone()` — détection opérateur par préfixe du numéro
   - `prefixeExiste()` — validation unicité préfixe
   - `creerOperateur()` — création sécurisée
-- [x] `TypeOperationModel.php`
+- [ok] `TypeOperationModel.php`
   - `getByOperateurEtType()` — récupération ciblée du type
   - `creerTypesParDefaut()` — initialisation automatique des 3 types
-- [x] `BaremeFraisModel.php`
+- [ok] `BaremeFraisModel.php`
   - `calculerFrais()` — calcul automatique selon la tranche de montant
   - `creerBaremesParDefaut()` — barèmes du sujet (frais 0 pour dépôt)
-- [x] `TransactionModel.php`
+- [ok] `TransactionModel.php`
   - `creerTransaction()` — enregistrement avec référence unique
   - `getTransactionsUtilisateur()` — JOIN multi-tables (transaction → type → opérateur)
   - `getTransactionsOperateur()` — vue complète pour l'espace opérateur
   - `getStatsOperateur()` — calcul gains retrait + transfert avec filtre dates
   - `genererReference()` — référence unique `TXN` + hex + timestamp
-- [x] `HistoriqueSoldeModel.php`
+- [ok] `HistoriqueSoldeModel.php`
   - `enregistrer()` — traçabilité solde avant / après chaque opération
 
 ### Logique métier
-- [x] Règle dépôt : `solde += montant` (frais = 0 Ar)
-- [x] Règle retrait : `solde -= (montant + frais)`
-- [x] Règle transfert : `expéditeur -= (montant + frais)` / `destinataire += montant`
-- [x] Validation montant minimum 100 Ar sur toutes les opérations
-- [x] Vérification solde suffisant avant retrait et transfert
+- [ok] Règle dépôt : `solde += montant` (frais = 0 Ar)
+- [ok] Règle retrait : `solde -= (montant + frais)`
+- [ok] Règle transfert : `expéditeur -= (montant + frais)` / `destinataire += montant`
+- [ok] Validation montant minimum 100 Ar sur toutes les opérations
+- [ok] Vérification solde suffisant avant retrait et transfert
 
 ### Configuration
-- [x] `app/Config/Database.php` — connexion SQLite3 (`WRITEPATH/database/money.db`)
-- [x] `app/Config/Paths.php` — chemins CI4
-- [x] `app/Config/Filters.php` — enregistrement des filtres d'authentification
-- [x] `app/Filters/ClientAuth.php` — protection routes espace client
-- [x] `app/Filters/OperateurAuth.php` — protection routes espace opérateur
+- [ok] `app/Config/Database.php` — connexion SQLite3 (`WRITEPATH/database/money.db`)
+- [ok] `app/Config/Paths.php` — chemins CI4
+- [ok] `app/Config/Filters.php` — enregistrement des filtres d'authentification
+- [ok] `app/Filters/ClientAuth.php` — protection routes espace client
+- [ok] `app/Filters/OperateurAuth.php` — protection routes espace opérateur
 
 ---
 
@@ -141,56 +141,3 @@
 - [x] Responsive mobile (breakpoints Bootstrap 5)
 - [x] Scrollbar personnalisée
 
-### JavaScript (public/assets/js/app.js)
-- [x] Auto-dismiss des alertes flash après 5 secondes
-- [x] Toggle affichage mot de passe (page login opérateur)
-- [x] Confirmation avant soumission retrait / transfert
-
-### Configuration & Déploiement
-- [x] `composer.json` — dépendances CI4 4.7.4 + SQLite
-- [x] `.env` — configuration environnement (base URL, CSRF, admin credentials)
-- [x] `spark` — CLI CodeIgniter 4 (format Bootstrap 4.5+)
-- [x] `public/index.php` — front controller CI4 4.5+ (`Boot::bootWeb`)
-- [x] `public/.htaccess` — réécriture URL Apache
-- [x] `README.md` — guide d'installation et d'utilisation
-- [x] Installation et correction des dépendances ThirdParty (Kint, Escaper, PSR/Log)
-
----
-
-## Résumé technique commun
-
-| Technologie | Utilisation |
-|---|---|
-| **PHP 8.1+** | Backend |
-| **CodeIgniter 4.7.4** | Framework MVC |
-| **SQLite3** | Base de données embarquée |
-| **Bootstrap 5.3** | Framework CSS |
-| **Bootstrap Icons 1.11** | Icônes |
-| **Inter** (Google Fonts) | Typographie |
-| **CSRF Cookie** | Sécurité formulaires |
-| **Session FileHandler** | Authentification |
-
-## Comptes de démonstration
-
-| Compte | Identifiant | Mot de passe |
-|---|---|---|
-| Opérateur admin | `admin` | `Admin@1234` |
-| Client Telma | `0340001234` | *(aucun — auto)* |
-| Client Telma | `0340005678` | *(aucun — auto)* |
-| Client Airtel | `0330009876` | *(aucun — auto)* |
-| Client Orange | `0320001111` | *(aucun — auto)* |
-
-## Lancement rapide
-
-```bash
-# Installer les dépendances
-php composer.phar install
-
-# Créer la base de données et les données de démo
-php spark migrate
-php spark db:seed DatabaseSeeder
-
-# Lancer le serveur
-php spark serve
-# → http://localhost:8080
-```
