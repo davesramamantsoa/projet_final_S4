@@ -43,7 +43,7 @@ class Operateur extends BaseController
         $password = $this->request->getPost('password') ?? '';
 
         $validUsername = env('operator.username', 'admin');
-        $validPassword = env('operator.password', 'Admin@1234');
+        $validPassword = env('operator.password', 'admin');
 
         if ($username === $validUsername && $password === $validPassword) {
             session()->set([

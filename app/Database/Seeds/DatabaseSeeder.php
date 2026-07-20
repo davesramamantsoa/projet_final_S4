@@ -134,7 +134,7 @@ class DatabaseSeeder extends Seeder
         }
 
         echo "\n✓ Seeder terminé !\n";
-        echo "  Connexion opérateur : admin / Admin@1234\n";
+        echo "  Connexion opérateur : admin / admin\n";
         echo "  Clients demo        : 0340001234, 0340005678, 0330009876, 0320001111\n";
         echo "  (solde initial chargé — connectez-vous pour tester les opérations)\n";
     }

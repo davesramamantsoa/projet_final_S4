@@ -174,24 +174,9 @@
 
 | Compte | Identifiant | Mot de passe |
 |---|---|---|
-| Opérateur admin | `admin` | `Admin@1234` |
+| Opérateur admin | `admin` | `admin` |
 | Client Telma | `0340001234` | *(aucun — auto)* |
 | Client Telma | `0340005678` | *(aucun — auto)* |
 | Client Airtel | `0330009876` | *(aucun — auto)* |
 | Client Orange | `0320001111` | *(aucun — auto)* |
-
-## Lancement rapide
-
-```bash
-# Installer les dépendances
-php composer.phar install
-
-# Créer la base de données et les données de démo
-php spark migrate
-php spark db:seed DatabaseSeeder
-
-# Lancer le serveur
-php spark serve
-# → http://localhost:8080
-```
 

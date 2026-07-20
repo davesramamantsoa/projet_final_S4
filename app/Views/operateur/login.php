@@ -65,7 +65,7 @@
             </p>
             <p class="mb-0 small text-muted">
               Identifiant : <code class="fw-700">admin</code>&nbsp;&nbsp;
-              Mot de passe : <code class="fw-700">Admin@1234</code>
+              Mot de passe : <code class="fw-700">admin</code>
             </p>
           </div>
 

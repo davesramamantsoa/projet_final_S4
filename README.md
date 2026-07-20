@@ -129,7 +129,7 @@ php spark serve
 | Champ | Valeur |
 |---|---|
 | Téléphone | `0340000000` |
-| Mot de passe | `Admin@1234` |
+| Mot de passe | `admin` |
 
 ---
 
