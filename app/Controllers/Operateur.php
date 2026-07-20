@@ -75,31 +75,81 @@ class Operateur extends BaseController
         ]);
     }
 
+    public function config()
+    {
+        $operateurs = $this->operateurModel->findAll();
+        return view('operateur/config', [
+            'operateurs' => $operateurs,
+        ]);
+    }
+
     public function creer()
     {
-        // CI4 4.4+ : utiliser is() au lieu de getMethod() === 'get'
         if ($this->request->is('get')) {
             return view('operateur/creer');
         }
 
-        $nom     = trim($this->request->getPost('nom_operateur')     ?? '');
+        $nom     = trim($this->request->getPost('nom_operateur') ?? '');
         $prefixe = trim($this->request->getPost('prefixe_operateur') ?? '');
+        $username = trim($this->request->getPost('username') ?? '');
+        $password = $this->request->getPost('password') ?? '';
+        $commission = (float)($this->request->getPost('commission_transfert_externe') ?? 0);
 
-        if (!$nom || !$prefixe) {
+        if (!$nom || !$prefixe || !$username || !$password) {
             return redirect()->back()->with('error', 'Tous les champs sont requis.');
         }
-        if ($this->operateurModel->prefixeExiste($prefixe)) {
-            return redirect()->back()->with('error', 'Ce préfixe existe déjà.');
+
+        // Vérifier username unique
+        if ($this->operateurModel->where('username', $username)->first()) {
+            return redirect()->back()->with('error', 'Ce nom d\'utilisateur existe déjà.');
         }
 
-        $operateur = $this->operateurModel->creerOperateur($nom, $prefixe);
-        if ($operateur) {
-            $this->typeOperationModel->creerTypesParDefaut($operateur['id']);
-            return redirect()->to(base_url('operateur/dashboard'))
-                ->with('success', "Opérateur « $nom » (préfixe $prefixe) créé avec ses barèmes par défaut.");
+        $id = $this->operateurModel->insert([
+            'nom_operateur' => $nom,
+            'prefixe_operateur' => $prefixe,
+            'commission_transfert_externe' => $commission,
+            'username' => $username,
+            'password' => password_hash($password, PASSWORD_DEFAULT)
+        ]);
+
+        if ($id) {
+            $this->typeOperationModel->creerTypesParDefaut($id);
+            return redirect()->to(base_url('operateur'))
+                ->with('success', "Opérateur $nom créé ! Login: $username");
         }
 
         return redirect()->back()->with('error', 'Erreur lors de la création.');
+    }
+
+    public function editer(int $id)
+    {
+        $operateur = $this->operateurModel->find($id);
+        if (!$operateur) {
+            return redirect()->to(base_url('operateur/dashboard'))->with('error', 'Opérateur introuvable.');
+        }
+
+        if ($this->request->is('get')) {
+            return view('operateur/editer', ['operateur' => $operateur]);
+        }
+
+        $nom = trim($this->request->getPost('nom_operateur') ?? '');
+        $prefixe = trim($this->request->getPost('prefixe_operateur') ?? '');
+        $commission = (float)($this->request->getPost('commission_transfert_externe') ?? 0);
+
+        if (!$nom || !$prefixe) {
+            return redirect()->back()->with('error', 'Le nom et le(s) préfixe(s) sont requis.');
+        }
+        if ($this->operateurModel->prefixeExiste($prefixe, $id)) {
+            return redirect()->back()->with('error', 'Un de ces préfixes existe déjà pour un autre opérateur.');
+        }
+
+        $this->operateurModel->update($id, [
+            'nom_operateur' => $nom,
+            'prefixe_operateur' => $prefixe,
+            'commission_transfert_externe' => $commission,
+        ]);
+
+        return redirect()->to(base_url('operateur/dashboard'))->with('success', 'Opérateur mis à jour avec succès.');
     }
 
     public function types(int $operateurId)
@@ -197,11 +247,12 @@ class Operateur extends BaseController
 
         $dateDebut = $this->request->getGet('date_debut');
         $dateFin   = $this->request->getGet('date_fin');
+        $limit     = (int) ($this->request->getGet('limit') ?? 100);
 
         return view('operateur/statistiques', [
             'operateur'    => $operateur,
             'stats'        => $this->transactionModel->getStatsOperateur($operateurId, $dateDebut, $dateFin),
-            'transactions' => $this->transactionModel->getTransactionsOperateur($operateurId, 50),
+            'transactions' => $this->transactionModel->getTransactionsOperateur($operateurId, $limit),
             'dateDebut'    => $dateDebut,
             'dateFin'      => $dateFin,
         ]);
@@ -209,17 +260,21 @@ class Operateur extends BaseController
 
     public function clients()
     {
-        $operateurs          = $this->operateurModel->findAll();
-        $clientsParOperateur = [];
-
-        foreach ($operateurs as $op) {
-            $clients = $this->utilisateurModel->getUtilisateursByPrefixe($op['prefixe_operateur']);
-            $clientsParOperateur[] = [
-                'operateur'    => $op,
-                'clients'      => $clients,
-                'total_soldes' => array_sum(array_column($clients, 'solde')),
-            ];
+        // Afficher seulement les clients de MON opérateur (le premier)
+        $operateurs = $this->operateurModel->findAll();
+        $monOperateur = $operateurs[0] ?? null;
+        
+        if (!$monOperateur) {
+            return redirect()->to(base_url('operateur/dashboard'))
+                ->with('error', 'Aucun opérateur configuré.');
         }
+
+        $clients = $this->utilisateurModel->getUtilisateursByPrefixe($monOperateur['prefixe_operateur']);
+        $clientsParOperateur = [[
+            'operateur'    => $monOperateur,
+            'clients'      => $clients,
+            'total_soldes' => array_sum(array_column($clients, 'solde')),
+        ]];
 
         return view('operateur/clients', ['clientsParOperateur' => $clientsParOperateur]);
     }

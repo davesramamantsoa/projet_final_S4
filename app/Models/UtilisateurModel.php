@@ -48,10 +48,22 @@ class UtilisateurModel extends Model
         return $u ? (float) $u['solde'] : 0.0;
     }
 
-    public function getUtilisateursByPrefixe(string $prefixe): array
+    public function getUtilisateursByPrefixe(string $prefixes): array
     {
-        return $this->like('numero_telephone', $prefixe, 'after')
-                    ->orderBy('date_creation', 'DESC')
-                    ->findAll();
+        // Supporte plusieurs préfixes séparés par virgule (ex: "034, 038")
+        $prefixeArray = array_map('trim', explode(',', $prefixes));
+        
+        $builder = $this->builder();
+        $builder->groupStart();
+        foreach ($prefixeArray as $i => $prefixe) {
+            if ($i === 0) {
+                $builder->like('numero_telephone', $prefixe, 'after');
+            } else {
+                $builder->orLike('numero_telephone', $prefixe, 'after');
+            }
+        }
+        $builder->groupEnd();
+        
+        return $builder->orderBy('date_creation', 'DESC')->get()->getResultArray();
     }
 }

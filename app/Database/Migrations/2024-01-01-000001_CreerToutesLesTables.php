@@ -16,11 +16,14 @@ class CreerToutesLesTables extends Migration
         $this->forge->addKey('id', true);
         $this->forge->createTable('utilisateurs', true);
 
-        // ─── 2. operateurs ─────────────────────────────────────────────
+        // ─── 2. operateurs ─────────────────────────────────────────
         $this->forge->addField([
             'id'                 => ['type' => 'INTEGER', 'auto_increment' => true],
             'nom_operateur'      => ['type' => 'VARCHAR', 'constraint' => 100],
-            'prefixe_operateur'  => ['type' => 'VARCHAR', 'constraint' => 10, 'unique' => true],
+            'prefixe_operateur'  => ['type' => 'VARCHAR', 'constraint' => 100],
+            'commission_transfert_externe' => ['type' => 'REAL', 'default' => 0],
+            'username'           => ['type' => 'VARCHAR', 'constraint' => 50, 'null' => true, 'unique' => true],
+            'password'           => ['type' => 'VARCHAR', 'constraint' => 255, 'null' => true],
         ]);
         $this->forge->addKey('id', true);
         $this->forge->createTable('operateurs', true);
@@ -54,6 +57,8 @@ class CreerToutesLesTables extends Migration
             'montant'                => ['type' => 'REAL'],
             'frais'                  => ['type' => 'REAL', 'default' => 0],
             'telephone_destinataire' => ['type' => 'VARCHAR', 'constraint' => 20, 'null' => true],
+            'montant_a_envoyer'      => ['type' => 'REAL', 'default' => 0],
+            'commission_externe'     => ['type' => 'REAL', 'default' => 0],
             'date_creation'          => ['type' => 'DATETIME', 'null' => true],
         ]);
         $this->forge->addKey('id', true);

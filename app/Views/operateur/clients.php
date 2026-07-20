@@ -11,7 +11,7 @@
     <?php foreach ($clientsParOperateur as $groupe):
         $op      = $groupe['operateur'];
         $clients = $groupe['clients'];
-        $totalSoldes = array_sum(array_column($clients, 'solde'));
+        $totalSoldes = $groupe['total_soldes'];
     ?>
         <div class="card mb-4 operator-card">
             <div class="card-header operator-card-header text-white py-3">
@@ -28,13 +28,13 @@
             </div>
             <div class="card-body p-0">
                 <?php if (empty($clients)): ?>
-                    <p class="text-muted text-center py-4">Aucun client avec le prefixe <?= esc($op['prefixe_operateur']) ?> pour l'instant.</p>
+                    <p class="text-muted text-center py-4">Aucun client avec les préfixes <?= esc($op['prefixe_operateur']) ?> pour l'instant.</p>
                 <?php else: ?>
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead class="table-light">
                                 <tr>
-                                    <th class="ps-4">Numero de telephone</th>
+                                    <th class="ps-4">Numéro de téléphone</th>
                                     <th>Solde</th>
                                     <th class="pe-4">Date d'inscription</th>
                                 </tr>
@@ -72,3 +72,4 @@
     <?php endforeach; ?>
 </div>
 
+<?= view('layouts/footer') ?>

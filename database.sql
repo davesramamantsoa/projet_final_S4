@@ -14,7 +14,10 @@ CREATE TABLE IF NOT EXISTS utilisateurs (
 CREATE TABLE IF NOT EXISTS operateurs (
     id                 INTEGER PRIMARY KEY AUTOINCREMENT,
     nom_operateur      TEXT NOT NULL,
-    prefixe_operateur  TEXT UNIQUE NOT NULL
+    prefixe_operateur  TEXT NOT NULL,
+    commission_transfert_externe REAL DEFAULT 0,
+    username           TEXT UNIQUE,
+    password           TEXT
 );
 
 -- ------------------------------------------------------------
@@ -50,6 +53,8 @@ CREATE TABLE IF NOT EXISTS transactions (
     montant                 REAL NOT NULL,
     frais                   REAL DEFAULT 0,
     telephone_destinataire  TEXT,
+    montant_a_envoyer       REAL DEFAULT 0,
+    commission_externe      REAL DEFAULT 0,
     date_creation           DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (utilisateur_id)    REFERENCES utilisateurs(id),
     FOREIGN KEY (type_operation_id) REFERENCES types_operations(id)

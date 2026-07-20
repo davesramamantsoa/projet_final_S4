@@ -27,10 +27,12 @@ $routes->group('client', ['filter' => 'clientAuth'], function ($routes) {
 $routes->get('operateur',         'Operateur::index');
 $routes->post('operateur/login',  'Operateur::login');
 $routes->get('operateur/logout',  'Operateur::logout');
+$routes->match(['get', 'post'], 'operateur/creer', 'Operateur::creer');
 
 $routes->group('operateur', ['filter' => 'operateurAuth'], function ($routes) {
     $routes->get('dashboard',                     'Operateur::dashboard');
-    $routes->match(['get', 'post'], 'creer',      'Operateur::creer');
+    $routes->get('config',                        'Operateur::config');
+    $routes->match(['get', 'post'], 'editer/(:num)', 'Operateur::editer/$1');
     $routes->get('types/(:num)',                  'Operateur::types/$1');
     $routes->match(['get', 'post'], 'baremes/(:num)', 'Operateur::baremes/$1');
     $routes->post('ajouterBareme/(:num)',         'Operateur::ajouterBareme/$1');

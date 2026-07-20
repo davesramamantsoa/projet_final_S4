@@ -21,18 +21,6 @@
                     <form action="<?= base_url('client/depot') ?>" method="post">
                         <?= csrf_field() ?>
 
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Opérateur</label>
-                            <select name="operateur_id" class="form-select" required>
-                                <option value="">— Choisir un opérateur —</option>
-                                <?php foreach ($operateurs as $op): ?>
-                                    <option value="<?= $op['id'] ?>">
-                                        <?= esc($op['nom_operateur']) ?> (<?= esc($op['prefixe_operateur']) ?>)
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-
                         <div class="mb-4">
                             <label class="form-label fw-semibold">Montant (Ar)</label>
                             <input type="number" name="montant" class="form-control form-control-lg"
