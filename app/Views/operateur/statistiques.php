@@ -117,4 +117,3 @@
 
 </div>
 
-<?= view('layouts/footer') ?>

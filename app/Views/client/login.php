@@ -1,6 +1,5 @@
 <?= view('layouts/header', ['title' => 'Connexion Client — MobiMoney']) ?>
 
-style="min-height:calc(100vh - 130px);background:linear-gradient(135deg,#E6FAF9 0%,#CCFBF1 50%,#F0FDF9 100%);display:flex;align-items:center"
   <div class="container py-4">
     <div class="row justify-content-center">
       <div class="col-md-5 col-lg-4">
@@ -32,11 +31,7 @@ style="min-height:calc(100vh - 130px);background:linear-gradient(135deg,#E6FAF9 
                        placeholder="034XXXXXXX" required autofocus
                        style="font-size:1.1rem;letter-spacing:.05em;font-weight:600">
               </div>
-              <div class="form-text mt-2">
-                <i class="bi bi-lightning-charge-fill text-warning me-1"></i>
-                Connexion instantanee — aucun mot de passe requis.
-                Si vous n'avez pas de compte, il sera cree automatiquement.
-              </div>
+             
             </div>
 
             <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
@@ -72,4 +67,3 @@ style="min-height:calc(100vh - 130px);background:linear-gradient(135deg,#E6FAF9 
   </div>
 </div>
 
-<?= view('layouts/footer') ?>

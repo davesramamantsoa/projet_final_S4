@@ -85,4 +85,3 @@ document.getElementById('togglePwd').addEventListener('click', function () {
 });
 </script>
 
-<?= view('layouts/footer') ?>

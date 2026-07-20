@@ -72,4 +72,3 @@
     <?php endforeach; ?>
 </div>
 
-<?= view('layouts/footer') ?>

@@ -103,4 +103,3 @@
   </div>
 </section>
 
-<?= view('layouts/footer') ?>

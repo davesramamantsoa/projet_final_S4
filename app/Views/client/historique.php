@@ -83,4 +83,4 @@
 
 </div>
 
-<?= view('layouts/footer') ?>
+

@@ -140,4 +140,3 @@
 
 </div>
 
-<?= view('layouts/footer') ?>

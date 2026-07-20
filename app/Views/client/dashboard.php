@@ -157,4 +157,4 @@
 
 </div>
 
-<?= view('layouts/footer') ?>
+
