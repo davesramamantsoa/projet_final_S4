@@ -57,6 +57,8 @@ class CreerToutesLesTables extends Migration
             'montant'                => ['type' => 'REAL'],
             'frais'                  => ['type' => 'REAL', 'default' => 0],
             'telephone_destinataire' => ['type' => 'VARCHAR', 'constraint' => 20, 'null' => true],
+            'montant_a_envoyer'      => ['type' => 'REAL', 'default' => 0],
+            'commission_externe'     => ['type' => 'REAL', 'default' => 0],
             'date_creation'          => ['type' => 'DATETIME', 'null' => true],
         ]);
         $this->forge->addKey('id', true);

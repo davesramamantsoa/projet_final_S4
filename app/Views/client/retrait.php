@@ -16,37 +16,37 @@
                     ? (new \App\Models\UtilisateurModel())->getSolde(session()->get('user_id'))
                     : 0;
             ?>
-            <div class="alert alert-info d-flex gap-2">
+            <div class="alert alert-warning d-flex gap-2">
                 <i class="bi bi-wallet2 fs-5 mt-1"></i>
-                <div>
-                    Solde actuel : <strong><?= number_format($solde, 0, ',', ' ') ?> Ar</strong><br>
-                    <small class="text-muted">Des frais s'appliquent selon le montant retiré.</small>
-                </div>
+                <div>Solde : <strong><?= number_format($solde, 0, ',', ' ') ?> Ar</strong></div>
             </div>
 
             <div class="card border-0">
                 <div class="card-body p-4">
-                    <form action="<?= base_url('client/retrait') ?>" method="post">
+                    <form action="<?= base_url('client/retrait') ?>" method="post" id="retraitForm">
                         <?= csrf_field() ?>
 
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Opérateur</label>
-                            <select name="operateur_id" class="form-select" required>
-                                <option value="">— Choisir un opérateur —</option>
-                                <?php foreach ($operateurs as $op): ?>
-                                    <option value="<?= $op['id'] ?>">
-                                        <?= esc($op['nom_operateur']) ?> (<?= esc($op['prefixe_operateur']) ?>)
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-
                         <div class="mb-4">
-                            <label class="form-label fw-semibold">Montant à retirer (Ar)</label>
+                            <label class="form-label fw-semibold">Montant (À retirer, en Ar)</label>
                             <input type="number" name="montant" class="form-control form-control-lg"
-                                   placeholder="Ex: 10000" min="100" step="1" required>
-                            <div class="form-text">Minimum : 100 Ar — Le total débité inclut les frais.</div>
+                                   placeholder="Ex: 5000" min="100" step="1" required id="montantInput">
+                            <div class="form-text">Frais : <strong id="fraisDisplay">-</strong></div>
                         </div>
+                        
+                        <script>
+                        const baremes = <?= json_encode($baremes ?? []) ?>;
+                        document.getElementById('montantInput')?.addEventListener('input', function() {
+                            const montant = parseFloat(this.value) || 0;
+                            let frais = 0;
+                            for (let b of baremes) {
+                                if (montant >= b.montant_min && montant <= b.montant_max) {
+                                    frais = b.montant_frais;
+                                    break;
+                                }
+                            }
+                            document.getElementById('fraisDisplay').textContent = frais.toLocaleString('fr-FR') + ' Ar';
+                        });
+                        </script>
 
                         <!-- Tableau barèmes indicatif -->
                         <div class="table-responsive mb-4">

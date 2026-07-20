@@ -27,18 +27,6 @@
                         <?= csrf_field() ?>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Opérateur</label>
-                            <select name="operateur_id" class="form-select" required>
-                                <option value="">— Choisir un opérateur —</option>
-                                <?php foreach ($operateurs as $op): ?>
-                                    <option value="<?= $op['id'] ?>">
-                                        <?= esc($op['nom_operateur']) ?> (<?= esc($op['prefixe_operateur']) ?>)
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
                             <label class="form-label fw-semibold">Numéro(s) destinataire(s)</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-person-fill"></i></span>

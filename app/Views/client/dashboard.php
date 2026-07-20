@@ -6,7 +6,7 @@
   <div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-2">
     <div>
       <h2 class="fw-800 mb-0" style="font-size:1.6rem">Bonjour 👋</h2>
-      <p class="text-muted small mb-0"><?= esc($utilisateur['numero_telephone']) ?> &mdash; <?= date('d M Y') ?></p>
+      <p class="text-muted small mb-0"><?= esc($utilisateur['numero_telephone'] ?? '') ?> &mdash; <?= date('d M Y') ?></p>
     </div>
     <a href="<?= base_url('client/historique') ?>" class="btn btn-outline-secondary btn-sm">
       <i class="bi bi-clock-history me-1"></i>Voir tout l'historique
@@ -117,7 +117,7 @@
                 <th class="ps-4">Type</th>
                 <th>Montant</th>
                 <th>Frais</th>
-                <th>Operateur</th>
+                <th>De/Vers</th>
                 <th class="pe-4">Date</th>
               </tr>
             </thead>
@@ -137,11 +137,13 @@
                   </span>
                 </td>
                 <td class="fw-700"><?= number_format((float)$tx['montant'], 0, ',', ' ') ?> <span class="text-muted fw-400 small">Ar</span></td>
-                <td class="text-muted"><?= number_format((float)$tx['frais'], 0, ',', ' ') ?> Ar</td>
-                <td>
-                  <span class="badge badge-operator">
-                    <i class="bi bi-building"></i> <?= esc($tx['nom_operateur'] ?? '—') ?>
-                  </span>
+                <td class="<?= $tx['frais'] > 0 ? 'text-danger' : 'text-muted' ?>"><?= number_format((float)$tx['frais'], 0, ',', ' ') ?> Ar</td>
+                <td class="small">
+                  <?php if (!empty($tx['telephone_destinataire'])): ?>
+                    <i class="bi bi-arrow-right text-danger me-1"></i><?= esc($tx['telephone_destinataire']) ?>
+                  <?php else: ?>
+                    <span class="text-muted">—</span>
+                  <?php endif; ?>
                 </td>
                 <td class="pe-4 text-muted small">
                   <?= isset($tx['date_creation']) ? date('d/m/Y H:i', strtotime($tx['date_creation'])) : '—' ?>

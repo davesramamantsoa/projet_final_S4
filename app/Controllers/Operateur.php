@@ -42,17 +42,15 @@ class Operateur extends BaseController
         $username = trim($this->request->getPost('username') ?? '');
         $password = $this->request->getPost('password') ?? '';
 
-        // Chercher l'opérateur par username
-        $operateur = $this->operateurModel->where('username', $username)->first();
-        
-        if ($operateur && password_verify($password, $operateur['password'])) {
+        $validUsername = env('operator.username', 'admin');
+        $validPassword = env('operator.password', 'admin');
+
+        if ($username === $validUsername && $password === $validPassword) {
             session()->set([
                 'user_type' => 'operator',
-                'operateur_id' => $operateur['id'],
-                'operateur_nom' => $operateur['nom_operateur'],
                 'username'  => $username,
             ]);
-            return redirect()->to(base_url('operateur/dashboard'))->with('success', 'Bienvenue ' . $operateur['nom_operateur'] . '.');
+            return redirect()->to(base_url('operateur/dashboard'))->with('success', 'Bienvenue dans l\'espace opérateur.');
         }
 
         return redirect()->back()->with('error', 'Identifiants invalides.');
@@ -66,18 +64,14 @@ class Operateur extends BaseController
 
     public function dashboard()
     {
-        $operateurId = session()->get('operateur_id');
-        $operateur = $this->operateurModel->find($operateurId);
-        
-        if (!$operateur) {
-            return redirect()->to(base_url('operateur'))->with('error', 'Opérateur introuvable.');
+        $operateurs = $this->operateurModel->findAll();
+        $stats      = [];
+        foreach ($operateurs as $op) {
+            $stats[$op['id']] = $this->transactionModel->getStatsOperateur($op['id']);
         }
-        
-        $stats = $this->transactionModel->getStatsOperateur($operateurId);
-        
         return view('operateur/dashboard', [
-            'operateur' => $operateur,
-            'stats'     => $stats,
+            'operateurs' => $operateurs,
+            'stats'      => $stats,
         ]);
     }
 
@@ -245,11 +239,12 @@ class Operateur extends BaseController
 
         $dateDebut = $this->request->getGet('date_debut');
         $dateFin   = $this->request->getGet('date_fin');
+        $limit     = (int) ($this->request->getGet('limit') ?? 100);
 
         return view('operateur/statistiques', [
             'operateur'    => $operateur,
             'stats'        => $this->transactionModel->getStatsOperateur($operateurId, $dateDebut, $dateFin),
-            'transactions' => $this->transactionModel->getTransactionsOperateur($operateurId, 50),
+            'transactions' => $this->transactionModel->getTransactionsOperateur($operateurId, $limit),
             'dateDebut'    => $dateDebut,
             'dateFin'      => $dateFin,
         ]);
@@ -257,14 +252,18 @@ class Operateur extends BaseController
 
     public function clients()
     {
-        $operateurId = session()->get('operateur_id');
-        $operateur = $this->operateurModel->find($operateurId);
-        $clients = $this->utilisateurModel->getUtilisateursByPrefixe($operateur['prefixe_operateur']);
-        
-        return view('operateur/clients', [
-            'operateur'    => $operateur,
-            'clients'      => $clients,
-            'total_soldes' => array_sum(array_column($clients, 'solde')),
-        ]);
+        $operateurs          = $this->operateurModel->findAll();
+        $clientsParOperateur = [];
+
+        foreach ($operateurs as $op) {
+            $clients = $this->utilisateurModel->getUtilisateursByPrefixe($op['prefixe_operateur']);
+            $clientsParOperateur[] = [
+                'operateur'    => $op,
+                'clients'      => $clients,
+                'total_soldes' => array_sum(array_column($clients, 'solde')),
+            ];
+        }
+
+        return view('operateur/clients', ['clientsParOperateur' => $clientsParOperateur]);
     }
 }

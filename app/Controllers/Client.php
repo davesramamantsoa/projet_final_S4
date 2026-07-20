@@ -99,17 +99,14 @@ class Client extends BaseController
 
     public function depot()
     {
-        $operateurs = $this->operateurModel->findAll();
-
-        // CI4 4.4+ : getMethod() retourne 'GET' en majuscule — utiliser is()
         if ($this->request->is('get')) {
-            return view('client/depot', ['operateurs' => $operateurs]);
+            return view('client/depot');
         }
 
         // ── Traitement POST ──
         $montant     = (float) $this->request->getPost('montant');
-        $operateurId = (int)   $this->request->getPost('operateur_id');
         $userId      = session()->get('user_id');
+        $operateurId = session()->get('operateur_id');
 
         if ($montant < 100) {
             return redirect()->back()->with('error', 'Montant minimum : 100 Ar.');
@@ -146,15 +143,28 @@ class Client extends BaseController
 
     public function retrait()
     {
-        $operateurs = $this->operateurModel->findAll();
+        $userId      = session()->get('user_id');
+        $monOperateurId = session()->get('operateur_id');
+        
+        // Récupérer mon opérateur
+        $monOperateur = $this->operateurModel->find($monOperateurId);
+        if (!$monOperateur) {
+            return redirect()->back()->with('error', 'Opérateur introuvable.');
+        }
+        
+        // Récupérer les barèmes de retrait de mon opérateur
+        $typeOp = $this->typeOperationModel->getByOperateurEtType($monOperateurId, 'retrait');
+        $baremes = [];
+        if ($typeOp) {
+            $baremes = $this->baremeFraisModel->getBaremesByTypeOperation($typeOp['id']);
+        }
 
         if ($this->request->is('get')) {
-            return view('client/retrait', ['operateurs' => $operateurs]);
+            return view('client/retrait', ['baremes' => $baremes]);
         }
 
         $montant     = (float) $this->request->getPost('montant');
-        $operateurId = (int)   $this->request->getPost('operateur_id');
-        $userId      = session()->get('user_id');
+        $operateurId = $monOperateurId;
 
         if ($montant < 100) {
             return redirect()->back()->with('error', 'Montant minimum : 100 Ar.');
@@ -206,19 +216,23 @@ class Client extends BaseController
 
     public function transfert()
     {
-        $operateurs = $this->operateurModel->findAll();
-
         if ($this->request->is('get')) {
-            return view('client/transfert', ['operateurs' => $operateurs]);
+            return view('client/transfert');
         }
 
         $montantGlobal = (float)  $this->request->getPost('montant');
-        $operateurId   = (int)    $this->request->getPost('operateur_id');
         $destinataireRaw = trim($this->request->getPost('telephone_destinataire') ?? '');
         $inclureFraisRetrait = (bool) $this->request->getPost('inclure_frais_retrait');
         $userId        = session()->get('user_id');
         $monTelephone  = session()->get('numero_telephone');
         $monOperateurId = session()->get('operateur_id');
+        
+        // Détection auto de mon opérateur
+        $monOperateur = $this->operateurModel->find($monOperateurId);
+        if (!$monOperateur) {
+            return redirect()->back()->with('error', 'Opérateur introuvable.');
+        }
+        $operateurId = $monOperateurId;
 
         if ($montantGlobal < 100) {
             return redirect()->back()->with('error', 'Montant minimum : 100 Ar.');
@@ -330,23 +344,43 @@ class Client extends BaseController
             $this->utilisateurModel->mettreAJourSolde($userId, $totalDebite, 'debit');
             
             // Créditer le destinataire
+            $soldePrecedentDest = $this->utilisateurModel->getSolde($destinataireUser['id']);
             $this->utilisateurModel->mettreAJourSolde($destinataireUser['id'], $montantRecu, 'credit');
             
-            // Enregistrer la transaction
-            // frais = frais transfert uniquement (mon opérateur garde)
-            // commission = commission destination (autre opérateur garde)
+            // Transaction expéditeur (envoi)
             $transaction = $this->transactionModel->creerTransaction(
                 $userId, 
                 $typeOp['id'], 
                 $montantAEnvoyer, 
-                $td['fraisTransfert'] + $td['fraisRetrait'],  // Frais total (transfert + retrait)
+                $td['fraisTransfert'] + $td['fraisRetrait'],
                 $destinataire,
-                $montantRecu,  // Montant que le dest. reçoit
-                $td['commissionDest']  // Commission de l'opérateur destinataire
+                $montantRecu,
+                $td['commissionDest']
             );
             if ($transaction) {
                 $nouveauSolde = $this->utilisateurModel->getSolde($userId);
                 $this->historiqueSoldeModel->enregistrer($userId, $transaction['id'], $soldePrecedent, $nouveauSolde);
+            }
+            
+            // Transaction destinataire (réception)
+            $destOp = $td['operateurDest'];
+            if ($destOp) {
+                $typeOpDest = $this->typeOperationModel->getByOperateurEtType($destOp['id'], 'transfert');
+                if ($typeOpDest) {
+                    $transactionDest = $this->transactionModel->creerTransaction(
+                        $destinataireUser['id'],
+                        $typeOpDest['id'],
+                        $montantRecu,
+                        0,  // Pas de frais pour celui qui reçoit
+                        $monTelephone,  // Téléphone de l'expéditeur
+                        0,
+                        0
+                    );
+                    if ($transactionDest) {
+                        $nouveauSoldeDest = $this->utilisateurModel->getSolde($destinataireUser['id']);
+                        $this->historiqueSoldeModel->enregistrer($destinataireUser['id'], $transactionDest['id'], $soldePrecedentDest, $nouveauSoldeDest);
+                    }
+                }
             }
         }
 

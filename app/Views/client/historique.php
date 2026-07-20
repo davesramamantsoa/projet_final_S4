@@ -28,7 +28,7 @@
               <th>Type</th>
               <th>Montant</th>
               <th>Frais</th>
-              <th>Destinataire</th>
+              <th>De/Vers</th>
               <th>Operateur</th>
               <th class="pe-4">Date</th>
             </tr>
@@ -51,7 +51,13 @@
               <td><span class="badge <?= $cfg[0] ?>"><i class="bi <?= $cfg[1] ?>"></i> <?= $cfg[2] ?></span></td>
               <td class="fw-700"><?= number_format((float)$tx['montant'], 0, ',', ' ') ?> <span class="text-muted fw-400 small">Ar</span></td>
               <td class="<?= $tx['frais'] > 0 ? 'text-danger fw-600' : 'text-muted' ?>"><?= number_format((float)$tx['frais'], 0, ',', ' ') ?> Ar</td>
-              <td class="small text-muted"><?= esc($tx['telephone_destinataire'] ?? '—') ?></td>
+              <td class="small">
+                <?php if ($tx['telephone_destinataire']): ?>
+                  <i class="bi bi-arrow-right text-danger me-1"></i><?= esc($tx['telephone_destinataire']) ?>
+                <?php else: ?>
+                  <span class="text-muted">—</span>
+                <?php endif; ?>
+              </td>
               <td><span class="badge badge-operator"><i class="bi bi-building"></i> <?= esc($tx['nom_operateur'] ?? '—') ?></span></td>
               <td class="pe-4 small text-muted"><?= date('d/m/Y H:i', strtotime($tx['date_creation'])) ?></td>
             </tr>
