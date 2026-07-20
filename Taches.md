@@ -117,27 +117,11 @@
 
 ### Vues — Layouts (app/Views/layouts/)
 - [x] `header.php` — navbar responsive 3 états (anonyme / client / opérateur), flashdata
-- [x] `footer.php` — footer sombre, Bootstrap JS, auto-dismiss alertes 5s
+- [x] `footer.php` — footer sombre, Bootstrap JS
 
 ### Page d'accueil (app/Views/home.php)
 - [x] Hero section avec fond dégradé teal-nuit
 - [x] Deux cards glassmorphism (Espace Client / Espace Opérateur)
 - [x] Liste des opérateurs disponibles avec préfixes colorés
 
-### Design UI & CSS (public/assets/css/style.css)
-- [x] Système de design complet avec variables CSS
-- [x] **Palette couleurs** :
-  - Client : bleu indigo `#4F46E5`
-  - Opérateur : **bleu-vert paon** `#0D9B8C` (remplacement du violet)
-- [x] Police **Inter** (Google Fonts) sur tout le projet
-- [x] Composants : cards avec ombre, `balance-card` gradient, `action-btn` colorés
-- [x] `stat-card` avec icônes sémantiques (dépôt=vert, retrait=rouge, transfert=bleu)
-- [x] Tables épurées avec hover subtil
-- [x] Badges sémantiques pill (`badge-depot`, `badge-retrait`, `badge-transfert`)
-- [x] Fee table (tableau des barèmes) stylisé en teal
-- [x] Formulaires avec focus ring coloré et icônes préfixes
-- [x] Boutons avec gradient + ombre colorée + animation hover
-- [x] Pagination personnalisée
-- [x] Responsive mobile (breakpoints Bootstrap 5)
-- [x] Scrollbar personnalisée
 
