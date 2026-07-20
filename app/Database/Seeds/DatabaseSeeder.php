@@ -13,27 +13,27 @@ class DatabaseSeeder extends Seeder
         $baremeFraisModel = new BaremeFraisModel();
         $transactionModel = new TransactionModel();
 
-        // ─── 1. Opérateurs ──────────────────────────────────────────
+        // ─── 1. Opérateurs ────────────────────────────────
         $operateurs = [
-            ['nom_operateur' => 'Telma',  'prefixe_operateur' => '034'],
-            ['nom_operateur' => 'Airtel', 'prefixe_operateur' => '033'],
-            ['nom_operateur' => 'Orange', 'prefixe_operateur' => '032'],
+            ['nom_operateur' => 'Telma',  'prefixe_operateur' => '034, 038', 'commission_transfert_externe' => 2.0, 'username' => 'telma', 'password' => password_hash('telma123', PASSWORD_DEFAULT)],
+            ['nom_operateur' => 'Airtel', 'prefixe_operateur' => '033', 'commission_transfert_externe' => 1.5, 'username' => 'airtel', 'password' => password_hash('airtel123', PASSWORD_DEFAULT)],
+            ['nom_operateur' => 'Orange', 'prefixe_operateur' => '032, 031', 'commission_transfert_externe' => 3.0, 'username' => 'orange', 'password' => password_hash('orange123', PASSWORD_DEFAULT)],
         ];
 
         $operateurIds = [];
         foreach ($operateurs as $opData) {
             $existant = $this->db->table('operateurs')
-                ->where('prefixe_operateur', $opData['prefixe_operateur'])
+                ->where('nom_operateur', $opData['nom_operateur'])
                 ->get()->getRowArray();
 
             if ($existant) {
-                $operateurIds[$opData['prefixe_operateur']] = $existant['id'];
+                $operateurIds[$opData['nom_operateur']] = $existant['id'];
                 continue;
             }
 
             $this->db->table('operateurs')->insert($opData);
             $opId = $this->db->insertID();
-            $operateurIds[$opData['prefixe_operateur']] = $opId;
+            $operateurIds[$opData['nom_operateur']] = $opId;
 
             foreach (['depot', 'retrait', 'transfert'] as $nomOperation) {
                 $this->db->table('types_operations')->insert([
@@ -76,9 +76,9 @@ class DatabaseSeeder extends Seeder
         echo count($clients) . " clients de démonstration créés\n";
 
         // ─── 3. Transactions de démonstration ───────────────────────
-        // Récupérer les IDs des types d'opérations pour Telma (prefixe 034)
-        $telmaId    = $operateurIds['034'];
-        $airtelId   = $operateurIds['033'];
+        // Récupérer les IDs des types d'opérations pour Telma
+        $telmaId    = $operateurIds['Telma'];
+        $airtelId   = $operateurIds['Airtel'];
 
         $typeDepotTelma     = $this->db->table('types_operations')
             ->where('operateur_id', $telmaId)->where('nom_operation', 'depot')->get()->getRowArray();
@@ -134,8 +134,11 @@ class DatabaseSeeder extends Seeder
         }
 
         echo "\n✓ Seeder terminé !\n";
-        echo "  Connexion opérateur : admin / admin\n";
-        echo "  Clients demo        : 0340001234, 0340005678, 0330009876, 0320001111\n";
+        echo "  Connexions opérateurs :\n";
+        echo "    - Telma  : telma / telma123\n";
+        echo "    - Airtel : airtel / airtel123\n";
+        echo "    - Orange : orange / orange123\n";
+        echo "  Clients demo : 0340001234, 0340005678, 0330009876, 0320001111\n";
         echo "  (solde initial chargé — connectez-vous pour tester les opérations)\n";
     }
 }

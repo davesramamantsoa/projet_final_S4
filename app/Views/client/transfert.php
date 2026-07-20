@@ -39,19 +39,38 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Numéro destinataire</label>
+                            <label class="form-label fw-semibold">Numéro(s) destinataire(s)</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="bi bi-person-fill"></i></span>
-                                <input type="tel" name="telephone_destinataire" class="form-control"
-                                       placeholder="034XXXXXXX" required>
+                                <input type="text" name="telephone_destinataire" class="form-control"
+                                       placeholder="034XXXXXXX ou 034XXX1, 034XXX2" required>
+                            </div>
+                            <div class="form-text">
+                                <i class="bi bi-info-circle me-1"></i>
+                                <strong>Envoi unique :</strong> entrez un numéro.<br>
+                                <i class="bi bi-info-circle me-1"></i>
+                                <strong>Envoi multiple (même opérateur uniquement) :</strong> séparez les numéros par une virgule. Le montant sera divisé équitablement.
                             </div>
                         </div>
 
                         <div class="mb-4">
-                            <label class="form-label fw-semibold">Montant (Ar)</label>
+                            <label class="form-label fw-semibold">Montant Total (Ar)</label>
                             <input type="number" name="montant" class="form-control form-control-lg"
                                    placeholder="Ex: 5000" min="100" step="1" required>
-                            <div class="form-text">Frais appliqués selon le montant (voir barème retrait).</div>
+                            <div class="form-text">Frais appliqués selon le montant transféré à chacun.</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="inclure_frais_retrait" name="inclure_frais_retrait" value="1">
+                                <label class="form-check-label fw-semibold" for="inclure_frais_retrait">
+                                    <i class="bi bi-cash-coin text-warning me-1"></i>Inclure les frais de retrait pour le(s) destinataire(s)
+                                </label>
+                            </div>
+                            <div class="alert alert-info mt-2 mb-0 py-2 px-3 small">
+                                <i class="bi bi-lightbulb me-1"></i> <strong>Note :</strong> Cette option ne s'applique que pour les transferts vers d'autres opérateurs. 
+                                Si cochée, vous prenez en charge les frais de retrait du destinataire.
+                            </div>
                         </div>
 
                         <div class="d-grid">

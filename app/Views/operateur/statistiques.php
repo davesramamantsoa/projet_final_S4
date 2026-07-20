@@ -74,6 +74,101 @@
     </div>
   </div>
 
+  <!-- Situation gains -->
+  <div class="row g-4 mb-4">
+    <div class="col-md-6">
+      <div class="card h-100" style="border:none;box-shadow:var(--shadow-sm)">
+        <div class="card-header fw-700 bg-primary text-white">📊 Situation des gains</div>
+        <div class="card-body">
+          <!-- Section Retrait -->
+          <div class="mb-3 pb-3 border-bottom">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="fw-semibold"><i class="bi bi-cash-coin text-warning me-2"></i>Gains Retrait</span>
+              <span class="fw-bold fs-5"><?= number_format($stats['gains_retrait'] ?? 0, 0, ',', ' ') ?> Ar</span>
+            </div>
+            <div class="text-end">
+              <small class="badge bg-warning text-dark"><?= $gainsTotal > 0 ? number_format(($stats['gains_retrait'] ?? 0) / $gainsTotal * 100, 1) : 0 ?>%</small>
+            </div>
+          </div>
+          
+          <!-- Section Transfert Même Opérateur -->
+          <div class="mb-3 pb-3 border-bottom">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="fw-semibold"><i class="bi bi-arrow-left-right text-info me-2"></i>Transfert (Même opérateur)</span>
+              <span class="fw-bold fs-5"><?= number_format($stats['gains_transfert_meme_op'] ?? 0, 0, ',', ' ') ?> Ar</span>
+            </div>
+            <div class="text-end">
+              <small class="badge bg-info text-dark"><?= $gainsTotal > 0 ? number_format(($stats['gains_transfert_meme_op'] ?? 0) / $gainsTotal * 100, 1) : 0 ?>%</small>
+            </div>
+          </div>
+          
+          <!-- Section Transfert Autres Opérateurs -->
+          <div class="mb-3 pb-3 border-bottom">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="fw-semibold"><i class="bi bi-send-check text-success me-2"></i>Transfert (Autres opérateurs)</span>
+              <span class="fw-bold fs-5 text-success"><?= number_format($stats['gains_transfert_autre_op'] ?? 0, 0, ',', ' ') ?> Ar</span>
+            </div>
+            <div class="text-end">
+              <small class="badge bg-success"><?= $gainsTotal > 0 ? number_format(($stats['gains_transfert_autre_op'] ?? 0) / $gainsTotal * 100, 1) : 0 ?>%</small>
+            </div>
+          </div>
+          
+          <!-- Section Commissions Reçues -->
+          <div class="mb-3 pb-3 border-bottom">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="fw-semibold"><i class="bi bi-cash-stack text-primary me-2"></i>Commissions reçues</span>
+              <span class="fw-bold fs-5 text-primary"><?= number_format($stats['commissions_recues'] ?? 0, 0, ',', ' ') ?> Ar</span>
+            </div>
+            <div class="text-end">
+              <small class="badge bg-primary"><?= $gainsTotal > 0 ? number_format(($stats['commissions_recues'] ?? 0) / ($gainsTotal + ($stats['commissions_recues'] ?? 0)) * 100, 1) : 0 ?>%</small>
+            </div>
+          </div>
+          
+          <!-- Total -->
+          <div class="d-flex justify-content-between mt-3 pt-3 bg-light px-3 py-2 rounded">
+            <span class="fw-bold fs-5"><i class="bi bi-calculator me-2"></i>Total des gains</span>
+            <span class="fw-bold text-operator fs-4"><?= number_format($gainsTotal, 0, ',', ' ') ?> Ar</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card h-100" style="border:none;box-shadow:var(--shadow-sm)">
+        <div class="card-header fw-700 bg-danger text-white">📤 Montants à envoyer aux autres opérateurs</div>
+        <div class="card-body">
+          <?php if (empty($stats['montants_a_envoyer'])): ?>
+            <div class="empty-state py-4"><i class="bi bi-check-circle text-success fs-2"></i><p class="mt-2 mb-0">Aucun montant à envoyer.</p></div>
+          <?php else: ?>
+            <?php 
+              $totalAEnvoyer = array_sum($stats['montants_a_envoyer']);
+            ?>
+            <div class="list-group list-group-flush">
+              <?php foreach ($stats['montants_a_envoyer'] as $opName => $montant): ?>
+                <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-3 border-bottom">
+                  <div>
+                    <span class="fw-semibold fs-6"><i class="bi bi-building me-2 text-danger"></i><?= esc($opName) ?></span>
+                    <div class="small text-muted mt-1">
+                      <i class="bi bi-percent"></i> <?= $totalAEnvoyer > 0 ? number_format($montant / $totalAEnvoyer * 100, 1) : 0 ?>% du total
+                    </div>
+                  </div>
+                  <span class="badge bg-danger rounded-pill fs-6 px-3 py-2"><?= number_format($montant, 0, ',', ' ') ?> Ar</span>
+                </div>
+              <?php endforeach; ?>
+            </div>
+            <div class="d-flex justify-content-between mt-3 pt-3 bg-danger bg-opacity-10 px-3 py-2 rounded border border-danger">
+              <span class="fw-bold text-danger"><i class="bi bi-cash-stack me-2"></i>Total à envoyer</span>
+              <span class="fw-bold text-danger fs-5"><?= number_format($totalAEnvoyer, 0, ',', ' ') ?> Ar</span>
+            </div>
+            <div class="alert alert-info mt-3 small mb-0">
+              <i class="bi bi-info-circle me-1"></i> Ce tableau indique les montants que votre opérateur doit transférer aux autres opérateurs.
+            </div>
+          <?php endif; ?>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Transactions récentes -->
   <div class="card" style="border:none;box-shadow:var(--shadow-md)">
     <div class="card-header d-flex align-items-center justify-content-between">

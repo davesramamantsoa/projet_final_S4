@@ -56,6 +56,14 @@
                 Espace client
               </a>
             </div>
+            
+            <hr class="my-3">
+            
+            <div class="text-center">
+              <a href="<?= base_url('operateur/creer') ?>" class="btn btn-outline-operator btn-sm w-100">
+                <i class="bi bi-building-add me-2"></i>Créer un nouvel opérateur
+              </a>
+            </div>
           </form>
 
           <div class="mt-4 p-3 rounded-3"

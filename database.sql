@@ -14,7 +14,10 @@ CREATE TABLE IF NOT EXISTS utilisateurs (
 CREATE TABLE IF NOT EXISTS operateurs (
     id                 INTEGER PRIMARY KEY AUTOINCREMENT,
     nom_operateur      TEXT NOT NULL,
-    prefixe_operateur  TEXT UNIQUE NOT NULL
+    prefixe_operateur  TEXT NOT NULL,
+    commission_transfert_externe REAL DEFAULT 0,
+    username           TEXT UNIQUE,
+    password           TEXT
 );
 
 -- ------------------------------------------------------------
