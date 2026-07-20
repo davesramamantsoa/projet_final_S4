@@ -45,10 +45,11 @@
               </a>
             </div>
           </form>
-
+          
           <!-- Prefixes indicatifs -->
           <div class="mt-4 p-3 rounded-3" style="background:var(--bg)">
             <p class="text-muted mb-2" style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em">
+              test : 0340001234<br>
               Prefixes valides
             </p>
             <div class="d-flex gap-2 flex-wrap">

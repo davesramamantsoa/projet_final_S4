@@ -93,11 +93,11 @@
   <div class="mt-4">
     <div class="d-flex align-items-center justify-content-between mb-3">
       <p class="section-title mb-0">Dernieres transactions</p>
-      <?php if (!empty($dernieres)): ?>
+      <!-- <?php if (!empty($dernieres)): ?>
         a href="<?= base_url('client/historique') ?>" class="small fw-600" style="color:var(--client-dark)">
           Voir tout <i class="bi bi-arrow-right ms-1"></i>
         </a>
-      <?php endif; ?>
+      <?php endif; ?> -->
     </div>
 
     <div class="card" style="border:none">
