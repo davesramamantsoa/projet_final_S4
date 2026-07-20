@@ -1,0 +1,139 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * MobiMoney — spark CLI (CodeIgniter 4)
+ *
+ * Auto-install : si vendor/ est absent, Composer + ThirdParty + DB
+ * sont configurés automatiquement avant le démarrage du serveur.
+ */
+
+$projectDir  = __DIR__;
+$vendorBoot  = $projectDir . '/vendor/codeigniter4/framework/system/Boot.php';
+$thirdParty  = $projectDir . '/vendor/codeigniter4/framework/system/ThirdParty/';
+
+// ═══════════════════════════════════════════════════════════════
+//  AUTO-INSTALL si vendor/ absent
+// ═══════════════════════════════════════════════════════════════
+if (!file_exists($vendorBoot)) {
+
+    echo "\n";
+    echo "+--------------------------------------------------+\n";
+    echo "|  MobiMoney — Installation automatique            |\n";
+    echo "|  (vendor/ absent — premiere execution)           |\n";
+    echo "+--------------------------------------------------+\n\n";
+
+    // ── Etape 1 : Composer ────────────────────────────────────
+    $composerPhar = $projectDir . '/composer.phar';
+
+    if (file_exists($composerPhar)) {
+        echo "[1/4] composer.phar deja present.\n";
+        $composerCmd = 'php ' . escapeshellarg($composerPhar);
+    } elseif (trim(shell_exec('which composer 2>/dev/null') ?? '') !== '') {
+        echo "[1/4] Composer global detecte.\n";
+        $composerCmd = 'composer';
+    } else {
+        echo "[1/4] Telechargement de Composer...\n";
+        $installer = @file_get_contents('https://getcomposer.org/installer');
+        if (!$installer) {
+            echo "\nERREUR : Impossible de telecharger Composer.\n";
+            echo "Verifiez votre connexion internet puis relancez.\n\n";
+            exit(1);
+        }
+        file_put_contents('/tmp/_composer_setup.php', $installer);
+        passthru('php /tmp/_composer_setup.php --install-dir=' . escapeshellarg($projectDir) . ' --filename=composer.phar --quiet');
+        @unlink('/tmp/_composer_setup.php');
+        $composerCmd = 'php ' . escapeshellarg($composerPhar);
+        echo "     OK\n";
+    }
+
+    // ── Etape 2 : composer install ────────────────────────────
+    echo "[2/4] Installation de CodeIgniter 4 et des dependances...\n";
+    passthru('cd ' . escapeshellarg($projectDir) . ' && ' . $composerCmd . ' install --no-interaction --no-progress 2>&1');
+
+    if (!file_exists($vendorBoot)) {
+        echo "\nERREUR : L'installation a echoue. Verifiez composer.json et la connexion.\n\n";
+        exit(1);
+    }
+    echo "     OK\n";
+
+    // ── Etape 3 : ThirdParty (Kint, Escaper, PSR/Log) ─────────
+    echo "[3/4] Configuration des bibliotheques ThirdParty...\n";
+
+    $rcopy = function (string $src, string $dst) use (&$rcopy): void {
+        if (!is_dir($src)) return;
+        if (!is_dir($dst)) mkdir($dst, 0755, true);
+        foreach (scandir($src) as $f) {
+            if ($f === '.' || $f === '..') continue;
+            is_dir($src . $f) ? $rcopy($src . $f . '/', $dst . $f . '/') : copy($src . $f, $dst . $f);
+        }
+    };
+
+    $deps = [
+        $projectDir . '/vendor/laminas/laminas-escaper/src/' => $thirdParty . 'Escaper/',
+        $projectDir . '/vendor/kint-php/kint/src/'           => $thirdParty . 'Kint/',
+        $projectDir . '/vendor/kint-php/kint/resources/'     => $thirdParty . 'Kint/resources/',
+        $projectDir . '/vendor/psr/log/src/'                 => $thirdParty . 'PSR/Log/',
+    ];
+    foreach ($deps as $src => $dst) {
+        $rcopy($src, $dst);
+    }
+    foreach (['init.php', 'init_helpers.php'] as $f) {
+        $s = $projectDir . '/vendor/kint-php/kint/' . $f;
+        if (file_exists($s)) copy($s, $thirdParty . 'Kint/' . $f);
+    }
+    echo "     OK\n";
+
+    // ── Etape 4 : Base de donnees ─────────────────────────────
+    echo "[4/4] Initialisation de la base de donnees SQLite...\n";
+
+    $dbDir = $projectDir . '/writable/database';
+    foreach (['writable/database', 'writable/logs', 'writable/cache', 'writable/session'] as $dir) {
+        if (!is_dir($projectDir . '/' . $dir)) mkdir($projectDir . '/' . $dir, 0755, true);
+    }
+
+    passthru('php ' . escapeshellarg(__FILE__) . ' migrate --no-interaction');
+    passthru('php ' . escapeshellarg(__FILE__) . ' db:seed DatabaseSeeder');
+    echo "     OK\n";
+
+    echo "\n Installation terminee ! Demarrage...\n\n";
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  AUTO-MIGRATION si DB absente mais vendor present
+// ═══════════════════════════════════════════════════════════════
+$dbPath = $projectDir . '/writable/database/money.db';
+if (file_exists($vendorBoot) && (!file_exists($dbPath) || filesize($dbPath) < 1000)) {
+    foreach (['writable/database', 'writable/logs', 'writable/cache', 'writable/session'] as $dir) {
+        if (!is_dir($projectDir . '/' . $dir)) mkdir($projectDir . '/' . $dir, 0755, true);
+    }
+    $current = implode(' ', array_slice($argv, 1));
+    if ($current !== 'migrate' && $current !== 'db:seed DatabaseSeeder') {
+        echo "[MobiMoney] Base de donnees manquante — initialisation automatique...\n";
+        passthru('php ' . escapeshellarg(__FILE__) . ' migrate --no-interaction');
+        passthru('php ' . escapeshellarg(__FILE__) . ' db:seed DatabaseSeeder');
+        echo "\n";
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  Boot CodeIgniter 4
+// ═══════════════════════════════════════════════════════════════
+use CodeIgniter\Boot;
+use Config\Paths;
+
+if (str_starts_with(PHP_SAPI, 'cgi')) {
+    exit("Le CLI spark ne fonctionne pas avec php-cgi.\n\n");
+}
+
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
+define('FCPATH', __DIR__ . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR);
+chdir(FCPATH);
+
+require FCPATH . '../app/Config/Paths.php';
+$paths = new Paths();
+
+require $paths->systemDirectory . '/Boot.php';
+exit(Boot::bootSpark($paths));

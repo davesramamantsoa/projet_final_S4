@@ -1,0 +1,30 @@
+# Vendor (CodeIgniter 4 framework installé via Composer)
+/vendor/
+
+# Base de données SQLite (générée automatiquement)
+/writable/database/*.db
+/writable/database/*.sqlite
+
+# Logs
+/writable/logs/*.log
+
+# Cache
+/writable/cache/*
+!/writable/cache/.gitkeep
+
+# Sessions
+/writable/session/*
+!/writable/session/.gitkeep
+
+# .env (contient des informations sensibles)
+# .env
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
