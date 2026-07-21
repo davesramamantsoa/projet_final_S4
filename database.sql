@@ -74,6 +74,12 @@ CREATE TABLE IF NOT EXISTS historique_soldes (
     FOREIGN KEY (transaction_id)  REFERENCES transactions(id)
 );
 
+CREATE TABLE pourcentage (
+    id                INTEGER PRIMARY KEY AUTOINCREMENT,
+    nb   INTEGER NOT NULL
+);
+insert INTO pourcentage(nb) VALUES(10);
+
 -- ------------------------------------------------------------
 -- INDEX
 -- ------------------------------------------------------------

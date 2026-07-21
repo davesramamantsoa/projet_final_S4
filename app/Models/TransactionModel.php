@@ -89,6 +89,22 @@ class TransactionModel extends Model
             ->limit($limit)
             ->get()->getResultArray();
     }
+     //alea
+    public function getpourcentage(): array
+    {
+        return (int) $this->db->table('pourcentage p')
+        ->select('p.nb')
+        ->get()->getResultArray();
+
+        //  return $this->
+                    //  ->findAll();
+    }
+    //  public function getBaremesByTypeOperation(int $typeOperationId): array
+    // {
+    //     return $this->where('type_operation_id', $typeOperationId)
+    //                 ->orderBy('montant_min', 'ASC')
+    //                 ->findAll();
+    // }
 
     public function getStatsOperateur(int $operateurId, ?string $dateDebut = null, ?string $dateFin = null): array
     {

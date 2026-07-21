@@ -318,6 +318,11 @@ class Client extends BaseController
 
             // Frais de transfert de mon opérateur
             $fraisTransfert = $this->baremeFraisModel->calculerFrais($typeOp['id'], $montantAEnvoyer);
+            // $pourcentage = $this->TransactionModel->getpourcentage();
+            $pourcentage = $this->transactionModel->getpourcentage();
+
+            //alea
+             $commissionDest = $montantAEnvoyer * (($pourcentage) / 100);
             
             // Commission de l'opérateur destinataire (si autre opérateur)
             $commissionDest = 0;
