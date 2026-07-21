@@ -8,6 +8,7 @@ use App\Models\TypeOperationModel;
 use App\Models\BaremeFraisModel;
 use App\Models\TransactionModel;
 use App\Models\HistoriqueSoldeModel;
+use App\Models\EpargneModel;
 
 class Client extends BaseController
 {
@@ -17,6 +18,7 @@ class Client extends BaseController
     protected $baremeFraisModel;
     protected $transactionModel;
     protected $historiqueSoldeModel;
+    protected $epargneModel;
 
     public function initController(
         \CodeIgniter\HTTP\RequestInterface $request,
@@ -30,6 +32,7 @@ class Client extends BaseController
         $this->baremeFraisModel     = new BaremeFraisModel();
         $this->transactionModel     = new TransactionModel();
         $this->historiqueSoldeModel = new HistoriqueSoldeModel();
+        $this->epargneModel = new EpargneModel();
     }
 
     // ─────────────────────────────────────────────────
@@ -437,4 +440,14 @@ class Client extends BaseController
             'total'        => $total,
         ]);
     }
+    public function epargne(){
+        return view('client/epargne');
+    }
+    public function enregistrerepargne(){
+        $nb=$this->request->getPost('epargne');
+        $userId=session()->get('user_id');
+        $this->epargneModel->enregistrer($userId,$nb);
+        return redirect()->to(base_url('client/dashboard'));
+    }
 }
+

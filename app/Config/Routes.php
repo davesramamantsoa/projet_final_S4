@@ -19,6 +19,8 @@ $routes->group('client', ['filter' => 'clientAuth'], function ($routes) {
     $routes->match(['get', 'post'], 'retrait',    'Client::retrait');
     $routes->match(['get', 'post'], 'transfert',  'Client::transfert');
     $routes->get('historique',             'Client::historique');
+    $routes->match(['get','post'],'epargne','Client::epargne');
+    $routes->match(['get','post'],'enregistrer','Client:enregistrerepargne');
 });
 
 // ═══════════════════════════════════════
