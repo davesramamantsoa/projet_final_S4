@@ -225,5 +225,8 @@
 
 ---
 
+creation nouvelle table epargne
 
 
+page dans client qui fait choisir le pourcentage epargne 
+chaque transfert doit retirer l epargne

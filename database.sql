@@ -80,6 +80,13 @@ CREATE TABLE pourcentage (
 );
 insert INTO pourcentage(nb) VALUES(10);
 
+
+CREATE TABLE epargne(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nb INTEGER NOT NULL,
+    utilisateur_id INTEGER NOT NULL
+);
+
 -- ------------------------------------------------------------
 -- INDEX
 -- ------------------------------------------------------------
