@@ -90,15 +90,16 @@ class TransactionModel extends Model
             ->get()->getResultArray();
     }
      //alea
-    public function getpourcentage(): array
-    {
-        return (int) $this->db->table('pourcentage p')
-        ->select('p.nb')
-        ->get()->getResultArray();
+ 
+  public function getpourcentage(): float
+{
+    $row = $this->db->table('pourcentage p')
+                    ->select('p.nb')
+                    ->get()
+                    ->getRow();
 
-        //  return $this->
-                    //  ->findAll();
-    }
+    return $row ? (float) $row->nb : 0.0;
+}
     //  public function getBaremesByTypeOperation(int $typeOperationId): array
     // {
     //     return $this->where('type_operation_id', $typeOperationId)
